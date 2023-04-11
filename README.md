@@ -1,0 +1,1 @@
+Flutter's missing Windows SystemMediaTransportControls implementation allowing one to control the media player of Flutter app from the taskbar
