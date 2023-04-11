@@ -1,0 +1,7 @@
+{
+  "dart.runPubGetOnPubspecChanges": "never",
+  "rust-analyzer.linkedProjects": [
+    ".\\packages\\smtc_windows\\native\\Cargo.toml",
+    ".\\packages\\smtc_windows\\native\\Cargo.toml"
+  ]
+}

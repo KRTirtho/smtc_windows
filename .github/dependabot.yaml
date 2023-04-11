@@ -1,0 +1,15 @@
+version: 2
+enable-beta-ecosystems: true
+updates:
+  - package-ecosystem: pub
+    directory: "/packages/smtc_windows"
+    schedule:
+      interval: weekly
+  - package-ecosystem: pub
+    directory: "/packages/smtc_windows/example"
+    schedule:
+      interval: weekly
+  - package-ecosystem: cargo
+    directory: "/packages/smtc_windows/native"
+    schedule:
+      interval: weekly

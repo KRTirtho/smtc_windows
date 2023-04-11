@@ -1,0 +1,38 @@
+name: smtc_windows
+
+repository: https://github.com/KRTirtho/smtc_windows
+
+packages:
+  - packages/**
+
+scripts:
+  analyze:
+    exec: flutter analyze .
+    description: Analyze a specific package in this project.
+
+  check-format:
+    exec: dart format --set-exit-if-changed .
+    description: Check the format of a specific package in this project.
+
+  format:
+    exec: dart format .
+    description: Format a specific package in this project.
+
+  version:
+    description: Updates version numbers in all build files
+    run: git-bash -c "bash ./scripts/version.sh"
+
+  build:
+    description: Build the .tar.gz for all windows platforms.
+    run: powershell -ExecutionPolicy bypass "& ./scripts/build-windows.ps1"
+
+  copylib:
+    run: powershell -ExecutionPolicy bypass "& ./scripts/copylib.ps1"
+    description: Copy the .tar.gz to the lib folder.
+
+  test:
+    run: melos exec -c 1 --fail-fast -- "flutter test test"
+    description: Run Flutter tests for a specific package in this project.
+    select-package:
+      flutter: true
+      dir-exists: test
