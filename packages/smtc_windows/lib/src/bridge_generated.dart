@@ -16,6 +16,54 @@ import 'package:uuid/uuid.dart';
 import 'bridge_generated.io.dart' if (dart.library.html) 'bridge_generated.web.dart';
 
 abstract class SmtcWindows {
+  StdSyncMutexWindowsMediaPlaybackMediaPlayer smtcNew({dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSmtcNewConstMeta;
+
+  Future<void> smtcUpdateConfig({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, required SMTCConfig config, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSmtcUpdateConfigConstMeta;
+
+  Future<void> smtcUpdateMetadata({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, required MusicMetadata metadata, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSmtcUpdateMetadataConstMeta;
+
+  Future<void> smtcUpdateTimeline({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, required PlaybackTimeline timeline, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSmtcUpdateTimelineConstMeta;
+
+  Future<void> smtcUpdatePlaybackStatus({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, required PlaybackStatus status, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSmtcUpdatePlaybackStatusConstMeta;
+
+  Future<void> smtcUpdateShuffle({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, required bool shuffle, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSmtcUpdateShuffleConstMeta;
+
+  Future<void> smtcUpdateRepeatMode({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, required String repeatMode, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSmtcUpdateRepeatModeConstMeta;
+
+  Future<void> smtcDisableSmtc({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSmtcDisableSmtcConstMeta;
+
+  Stream<String> smtcButtonPressEvent({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSmtcButtonPressEventConstMeta;
+
+  Stream<int> smtcPositionChangeRequestEvent({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSmtcPositionChangeRequestEventConstMeta;
+
+  Stream<bool> smtcShuffleRequestEvent({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSmtcShuffleRequestEventConstMeta;
+
+  Stream<String> smtcRepeatModeRequestEvent({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSmtcRepeatModeRequestEventConstMeta;
+
   Future<void> initializeMediaPlayer({required SMTCConfig config, required PlaybackTimeline timeline, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kInitializeMediaPlayerConstMeta;
@@ -63,6 +111,24 @@ abstract class SmtcWindows {
   Stream<String> repeatModeRequestEvent({dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kRepeatModeRequestEventConstMeta;
+
+  DropFnType get dropOpaqueStdSyncMutexWindowsMediaPlaybackMediaPlayer;
+  ShareFnType get shareOpaqueStdSyncMutexWindowsMediaPlaybackMediaPlayer;
+  OpaqueTypeFinalizer get StdSyncMutexWindowsMediaPlaybackMediaPlayerFinalizer;
+}
+
+@sealed
+class StdSyncMutexWindowsMediaPlaybackMediaPlayer extends FrbOpaque {
+  final SmtcWindows bridge;
+  StdSyncMutexWindowsMediaPlaybackMediaPlayer.fromRaw(int ptr, int size, this.bridge) : super.unsafe(ptr, size);
+  @override
+  DropFnType get dropFn => bridge.dropOpaqueStdSyncMutexWindowsMediaPlaybackMediaPlayer;
+
+  @override
+  ShareFnType get shareFn => bridge.shareOpaqueStdSyncMutexWindowsMediaPlaybackMediaPlayer;
+
+  @override
+  OpaqueTypeFinalizer get staticFinalizer => bridge.StdSyncMutexWindowsMediaPlaybackMediaPlayerFinalizer;
 }
 
 class MusicMetadata {
@@ -134,6 +200,259 @@ class SmtcWindowsImpl implements SmtcWindows {
   /// Only valid on web/WASM platforms.
   factory SmtcWindowsImpl.wasm(FutureOr<WasmModule> module) => SmtcWindowsImpl(module as ExternalLibrary);
   SmtcWindowsImpl.raw(this._platform);
+  StdSyncMutexWindowsMediaPlaybackMediaPlayer smtcNew({dynamic hint}) {
+    return _platform.executeSync(FlutterRustBridgeSyncTask(
+      callFfi: () => _platform.inner.wire_smtc_new(),
+      parseSuccessData: _wire2api_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+      constMeta: kSmtcNewConstMeta,
+      argValues: [],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSmtcNewConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "smtc_new",
+        argNames: [],
+      );
+
+  Future<void> smtcUpdateConfig({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, required SMTCConfig config, dynamic hint}) {
+    var arg0 = _platform.api2wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(mediaPlayer);
+    var arg1 = _platform.api2wire_box_autoadd_smtc_config(config);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_smtc_update_config(port_, arg0, arg1),
+      parseSuccessData: _wire2api_unit,
+      constMeta: kSmtcUpdateConfigConstMeta,
+      argValues: [
+        mediaPlayer,
+        config
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSmtcUpdateConfigConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "smtc_update_config",
+        argNames: [
+          "mediaPlayer",
+          "config"
+        ],
+      );
+
+  Future<void> smtcUpdateMetadata({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, required MusicMetadata metadata, dynamic hint}) {
+    var arg0 = _platform.api2wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(mediaPlayer);
+    var arg1 = _platform.api2wire_box_autoadd_music_metadata(metadata);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_smtc_update_metadata(port_, arg0, arg1),
+      parseSuccessData: _wire2api_unit,
+      constMeta: kSmtcUpdateMetadataConstMeta,
+      argValues: [
+        mediaPlayer,
+        metadata
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSmtcUpdateMetadataConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "smtc_update_metadata",
+        argNames: [
+          "mediaPlayer",
+          "metadata"
+        ],
+      );
+
+  Future<void> smtcUpdateTimeline({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, required PlaybackTimeline timeline, dynamic hint}) {
+    var arg0 = _platform.api2wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(mediaPlayer);
+    var arg1 = _platform.api2wire_box_autoadd_playback_timeline(timeline);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_smtc_update_timeline(port_, arg0, arg1),
+      parseSuccessData: _wire2api_unit,
+      constMeta: kSmtcUpdateTimelineConstMeta,
+      argValues: [
+        mediaPlayer,
+        timeline
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSmtcUpdateTimelineConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "smtc_update_timeline",
+        argNames: [
+          "mediaPlayer",
+          "timeline"
+        ],
+      );
+
+  Future<void> smtcUpdatePlaybackStatus({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, required PlaybackStatus status, dynamic hint}) {
+    var arg0 = _platform.api2wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(mediaPlayer);
+    var arg1 = api2wire_playback_status(status);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_smtc_update_playback_status(port_, arg0, arg1),
+      parseSuccessData: _wire2api_unit,
+      constMeta: kSmtcUpdatePlaybackStatusConstMeta,
+      argValues: [
+        mediaPlayer,
+        status
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSmtcUpdatePlaybackStatusConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "smtc_update_playback_status",
+        argNames: [
+          "mediaPlayer",
+          "status"
+        ],
+      );
+
+  Future<void> smtcUpdateShuffle({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, required bool shuffle, dynamic hint}) {
+    var arg0 = _platform.api2wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(mediaPlayer);
+    var arg1 = shuffle;
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_smtc_update_shuffle(port_, arg0, arg1),
+      parseSuccessData: _wire2api_unit,
+      constMeta: kSmtcUpdateShuffleConstMeta,
+      argValues: [
+        mediaPlayer,
+        shuffle
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSmtcUpdateShuffleConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "smtc_update_shuffle",
+        argNames: [
+          "mediaPlayer",
+          "shuffle"
+        ],
+      );
+
+  Future<void> smtcUpdateRepeatMode({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, required String repeatMode, dynamic hint}) {
+    var arg0 = _platform.api2wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(mediaPlayer);
+    var arg1 = _platform.api2wire_String(repeatMode);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_smtc_update_repeat_mode(port_, arg0, arg1),
+      parseSuccessData: _wire2api_unit,
+      constMeta: kSmtcUpdateRepeatModeConstMeta,
+      argValues: [
+        mediaPlayer,
+        repeatMode
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSmtcUpdateRepeatModeConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "smtc_update_repeat_mode",
+        argNames: [
+          "mediaPlayer",
+          "repeatMode"
+        ],
+      );
+
+  Future<void> smtcDisableSmtc({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, dynamic hint}) {
+    var arg0 = _platform.api2wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(mediaPlayer);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_smtc_disable_smtc(port_, arg0),
+      parseSuccessData: _wire2api_unit,
+      constMeta: kSmtcDisableSmtcConstMeta,
+      argValues: [
+        mediaPlayer
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSmtcDisableSmtcConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "smtc_disable_smtc",
+        argNames: [
+          "mediaPlayer"
+        ],
+      );
+
+  Stream<String> smtcButtonPressEvent({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, dynamic hint}) {
+    var arg0 = _platform.api2wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(mediaPlayer);
+    return _platform.executeStream(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_smtc_button_press_event(port_, arg0),
+      parseSuccessData: _wire2api_String,
+      constMeta: kSmtcButtonPressEventConstMeta,
+      argValues: [
+        mediaPlayer
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSmtcButtonPressEventConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "smtc_button_press_event",
+        argNames: [
+          "mediaPlayer"
+        ],
+      );
+
+  Stream<int> smtcPositionChangeRequestEvent({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, dynamic hint}) {
+    var arg0 = _platform.api2wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(mediaPlayer);
+    return _platform.executeStream(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_smtc_position_change_request_event(port_, arg0),
+      parseSuccessData: _wire2api_i64,
+      constMeta: kSmtcPositionChangeRequestEventConstMeta,
+      argValues: [
+        mediaPlayer
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSmtcPositionChangeRequestEventConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "smtc_position_change_request_event",
+        argNames: [
+          "mediaPlayer"
+        ],
+      );
+
+  Stream<bool> smtcShuffleRequestEvent({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, dynamic hint}) {
+    var arg0 = _platform.api2wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(mediaPlayer);
+    return _platform.executeStream(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_smtc_shuffle_request_event(port_, arg0),
+      parseSuccessData: _wire2api_bool,
+      constMeta: kSmtcShuffleRequestEventConstMeta,
+      argValues: [
+        mediaPlayer
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSmtcShuffleRequestEventConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "smtc_shuffle_request_event",
+        argNames: [
+          "mediaPlayer"
+        ],
+      );
+
+  Stream<String> smtcRepeatModeRequestEvent({required StdSyncMutexWindowsMediaPlaybackMediaPlayer mediaPlayer, dynamic hint}) {
+    var arg0 = _platform.api2wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(mediaPlayer);
+    return _platform.executeStream(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_smtc_repeat_mode_request_event(port_, arg0),
+      parseSuccessData: _wire2api_String,
+      constMeta: kSmtcRepeatModeRequestEventConstMeta,
+      argValues: [
+        mediaPlayer
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSmtcRepeatModeRequestEventConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "smtc_repeat_mode_request_event",
+        argNames: [
+          "mediaPlayer"
+        ],
+      );
+
   Future<void> initializeMediaPlayer({required SMTCConfig config, required PlaybackTimeline timeline, dynamic hint}) {
     var arg0 = _platform.api2wire_box_autoadd_smtc_config(config);
     var arg1 = _platform.api2wire_box_autoadd_playback_timeline(timeline);
@@ -352,10 +671,18 @@ class SmtcWindowsImpl implements SmtcWindows {
         argNames: [],
       );
 
+  DropFnType get dropOpaqueStdSyncMutexWindowsMediaPlaybackMediaPlayer => _platform.inner.drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer;
+  ShareFnType get shareOpaqueStdSyncMutexWindowsMediaPlaybackMediaPlayer => _platform.inner.share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer;
+  OpaqueTypeFinalizer get StdSyncMutexWindowsMediaPlaybackMediaPlayerFinalizer => _platform.StdSyncMutexWindowsMediaPlaybackMediaPlayerFinalizer;
+
   void dispose() {
     _platform.dispose();
   }
 // Section: wire2api
+
+  StdSyncMutexWindowsMediaPlaybackMediaPlayer _wire2api_StdSyncMutexWindowsMediaPlaybackMediaPlayer(dynamic raw) {
+    return StdSyncMutexWindowsMediaPlaybackMediaPlayer.fromRaw(raw[0], raw[1], this);
+  }
 
   String _wire2api_String(dynamic raw) {
     return raw as String;

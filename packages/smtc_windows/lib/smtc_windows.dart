@@ -7,3 +7,4 @@ export 'src/bridge_generated.dart'
 
 export 'src/enums/button_event.dart';
 export 'src/enums/repeat_mode.dart';
+export 'src/conventional.dart';

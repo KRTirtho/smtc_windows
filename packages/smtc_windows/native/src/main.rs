@@ -1,9 +1,9 @@
 use std::{thread, time::Duration};
 
-mod api;
-mod config;
-mod metadata;
-mod timeline;
+pub mod api;
+pub mod config;
+pub mod metadata;
+pub mod timeline;
 
 use crate::{
     api::{initialize_media_player, update_metadata},
@@ -32,9 +32,9 @@ fn main() {
 
     println!("Waiting 10 seconds...");
 
-    initialize_media_player(smtc_config, timeline).unwrap();
+    initialize_media_player(smtc_config.clone(), timeline.clone()).unwrap();
 
-    update_metadata(music_metadata).unwrap();
+    update_metadata(music_metadata.clone()).unwrap();
 
     thread::sleep(Duration::from_secs(10));
 }

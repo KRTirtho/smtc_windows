@@ -6,7 +6,7 @@ import 'package:smtc_windows/src/enums/repeat_mode.dart';
 import 'package:smtc_windows/src/ffi.dart';
 import 'package:smtc_windows/src/extensions.dart';
 
-final SmtcWindows _api = createLib();
+final SmtcWindows api = createLib();
 SMTCWindows? _instance;
 
 class SMTCWindows {
@@ -91,14 +91,14 @@ class SMTCWindows {
     ),
   }) async {
     _instance ??= SMTCWindows._(config: config, timeline: timeline);
-    await _api.initializeMediaPlayer(config: config, timeline: timeline);
-    instance._buttonPressedStream ??= _api
+    await api.initializeMediaPlayer(config: config, timeline: timeline);
+    instance._buttonPressedStream ??= api
         .buttonPressEvent()
         .map((event) => PressedButton.fromString(event))
         .asBroadcastStream();
     instance._shuffleChangeStream ??=
-        _api.shuffleRequestEvent().asBroadcastStream();
-    instance._repeatModeChangeStream ??= _api
+        api.shuffleRequestEvent().asBroadcastStream();
+    instance._repeatModeChangeStream ??= api
         .repeatModeRequestEvent()
         .map(RepeatMode.fromString)
         .asBroadcastStream();
@@ -106,28 +106,28 @@ class SMTCWindows {
 
   static Future<void> updateConfig(SMTCConfig config) {
     instance._config = config;
-    return _api.updateConfig(config: config);
+    return api.updateConfig(config: config);
   }
 
   static Future<void> updateTimeline(PlaybackTimeline timeline) {
     instance._timeline = timeline;
-    return _api.updateTimeline(timeline: timeline);
+    return api.updateTimeline(timeline: timeline);
   }
 
   static Future<void> updateMetadata(MusicMetadata metadata) {
     instance._metadata = metadata;
-    return _api.updateMetadata(metadata: metadata);
+    return api.updateMetadata(metadata: metadata);
   }
 
   static Future<void> disable() async {
-    await _api.updatePlaybackStatus(status: PlaybackStatus.Closed);
-    await _api.disableSmtc();
+    await api.updatePlaybackStatus(status: PlaybackStatus.Closed);
+    await api.disableSmtc();
     _instance = null;
   }
 
   static Future<void> setPlaybackStatus(PlaybackStatus status) {
     instance._status = status;
-    return _api.updatePlaybackStatus(status: status);
+    return api.updatePlaybackStatus(status: status);
   }
 
   static Future<void> setIsPlayEnabled(bool enabled) {
@@ -218,11 +218,11 @@ class SMTCWindows {
 
   static Future<void> setShuffleEnabled(bool enabled) {
     instance._shuffleEnabled = enabled;
-    return _api.updateShuffle(shuffle: enabled);
+    return api.updateShuffle(shuffle: enabled);
   }
 
   static Future<void> setRepeatMode(RepeatMode repeatMode) {
     instance._repeatMode = repeatMode;
-    return _api.updateRepeatMode(repeatMode: repeatMode.asString);
+    return api.updateRepeatMode(repeatMode: repeatMode.asString);
   }
 }

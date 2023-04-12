@@ -17,6 +17,13 @@ class SmtcWindowsPlatform extends FlutterRustBridgeBase<SmtcWindowsWire> {
 // Section: api2wire
 
   @protected
+  wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer api2wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(StdSyncMutexWindowsMediaPlaybackMediaPlayer raw) {
+    final ptr = inner.new_StdSyncMutexWindowsMediaPlaybackMediaPlayer();
+    _api_fill_to_wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(raw, ptr);
+    return ptr;
+  }
+
+  @protected
   ffi.Pointer<wire_uint_8_list> api2wire_String(String raw) {
     return api2wire_uint_8_list(utf8.encoder.convert(raw));
   }
@@ -70,7 +77,13 @@ class SmtcWindowsPlatform extends FlutterRustBridgeBase<SmtcWindowsWire> {
   }
 // Section: finalizer
 
+  late final OpaqueTypeFinalizer _StdSyncMutexWindowsMediaPlaybackMediaPlayerFinalizer = OpaqueTypeFinalizer(inner._drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayerPtr);
+  OpaqueTypeFinalizer get StdSyncMutexWindowsMediaPlaybackMediaPlayerFinalizer => _StdSyncMutexWindowsMediaPlaybackMediaPlayerFinalizer;
 // Section: api_fill_to_wire
+
+  void _api_fill_to_wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(StdSyncMutexWindowsMediaPlaybackMediaPlayer apiObj, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer wireObj) {
+    wireObj.ptr = apiObj.shareOrMove();
+  }
 
   void _api_fill_to_wire_box_autoadd_music_metadata(MusicMetadata apiObj, ffi.Pointer<wire_MusicMetadata> wireObj) {
     _api_fill_to_wire_music_metadata(apiObj, wireObj.ref);
@@ -187,6 +200,168 @@ class SmtcWindowsWire implements FlutterRustBridgeWireBase {
 
   late final _init_frb_dart_api_dlPtr = _lookup<ffi.NativeFunction<ffi.IntPtr Function(ffi.Pointer<ffi.Void>)>>('init_frb_dart_api_dl');
   late final _init_frb_dart_api_dl = _init_frb_dart_api_dlPtr.asFunction<int Function(ffi.Pointer<ffi.Void>)>();
+
+  WireSyncReturn wire_smtc_new() {
+    return _wire_smtc_new();
+  }
+
+  late final _wire_smtc_newPtr = _lookup<ffi.NativeFunction<WireSyncReturn Function()>>('wire_smtc_new');
+  late final _wire_smtc_new = _wire_smtc_newPtr.asFunction<WireSyncReturn Function()>();
+
+  void wire_smtc_update_config(
+    int port_,
+    wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+    ffi.Pointer<wire_SMTCConfig> config,
+  ) {
+    return _wire_smtc_update_config(
+      port_,
+      media_player,
+      config,
+    );
+  }
+
+  late final _wire_smtc_update_configPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer, ffi.Pointer<wire_SMTCConfig>)>>('wire_smtc_update_config');
+  late final _wire_smtc_update_config = _wire_smtc_update_configPtr.asFunction<void Function(int, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer, ffi.Pointer<wire_SMTCConfig>)>();
+
+  void wire_smtc_update_metadata(
+    int port_,
+    wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+    ffi.Pointer<wire_MusicMetadata> metadata,
+  ) {
+    return _wire_smtc_update_metadata(
+      port_,
+      media_player,
+      metadata,
+    );
+  }
+
+  late final _wire_smtc_update_metadataPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer, ffi.Pointer<wire_MusicMetadata>)>>('wire_smtc_update_metadata');
+  late final _wire_smtc_update_metadata = _wire_smtc_update_metadataPtr.asFunction<void Function(int, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer, ffi.Pointer<wire_MusicMetadata>)>();
+
+  void wire_smtc_update_timeline(
+    int port_,
+    wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+    ffi.Pointer<wire_PlaybackTimeline> timeline,
+  ) {
+    return _wire_smtc_update_timeline(
+      port_,
+      media_player,
+      timeline,
+    );
+  }
+
+  late final _wire_smtc_update_timelinePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer, ffi.Pointer<wire_PlaybackTimeline>)>>('wire_smtc_update_timeline');
+  late final _wire_smtc_update_timeline = _wire_smtc_update_timelinePtr.asFunction<void Function(int, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer, ffi.Pointer<wire_PlaybackTimeline>)>();
+
+  void wire_smtc_update_playback_status(
+    int port_,
+    wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+    int status,
+  ) {
+    return _wire_smtc_update_playback_status(
+      port_,
+      media_player,
+      status,
+    );
+  }
+
+  late final _wire_smtc_update_playback_statusPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer, ffi.Int32)>>('wire_smtc_update_playback_status');
+  late final _wire_smtc_update_playback_status = _wire_smtc_update_playback_statusPtr.asFunction<void Function(int, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer, int)>();
+
+  void wire_smtc_update_shuffle(
+    int port_,
+    wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+    bool shuffle,
+  ) {
+    return _wire_smtc_update_shuffle(
+      port_,
+      media_player,
+      shuffle,
+    );
+  }
+
+  late final _wire_smtc_update_shufflePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer, ffi.Bool)>>('wire_smtc_update_shuffle');
+  late final _wire_smtc_update_shuffle = _wire_smtc_update_shufflePtr.asFunction<void Function(int, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer, bool)>();
+
+  void wire_smtc_update_repeat_mode(
+    int port_,
+    wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+    ffi.Pointer<wire_uint_8_list> repeat_mode,
+  ) {
+    return _wire_smtc_update_repeat_mode(
+      port_,
+      media_player,
+      repeat_mode,
+    );
+  }
+
+  late final _wire_smtc_update_repeat_modePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer, ffi.Pointer<wire_uint_8_list>)>>('wire_smtc_update_repeat_mode');
+  late final _wire_smtc_update_repeat_mode = _wire_smtc_update_repeat_modePtr.asFunction<void Function(int, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_smtc_disable_smtc(
+    int port_,
+    wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+  ) {
+    return _wire_smtc_disable_smtc(
+      port_,
+      media_player,
+    );
+  }
+
+  late final _wire_smtc_disable_smtcPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer)>>('wire_smtc_disable_smtc');
+  late final _wire_smtc_disable_smtc = _wire_smtc_disable_smtcPtr.asFunction<void Function(int, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer)>();
+
+  void wire_smtc_button_press_event(
+    int port_,
+    wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+  ) {
+    return _wire_smtc_button_press_event(
+      port_,
+      media_player,
+    );
+  }
+
+  late final _wire_smtc_button_press_eventPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer)>>('wire_smtc_button_press_event');
+  late final _wire_smtc_button_press_event = _wire_smtc_button_press_eventPtr.asFunction<void Function(int, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer)>();
+
+  void wire_smtc_position_change_request_event(
+    int port_,
+    wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+  ) {
+    return _wire_smtc_position_change_request_event(
+      port_,
+      media_player,
+    );
+  }
+
+  late final _wire_smtc_position_change_request_eventPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer)>>('wire_smtc_position_change_request_event');
+  late final _wire_smtc_position_change_request_event = _wire_smtc_position_change_request_eventPtr.asFunction<void Function(int, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer)>();
+
+  void wire_smtc_shuffle_request_event(
+    int port_,
+    wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+  ) {
+    return _wire_smtc_shuffle_request_event(
+      port_,
+      media_player,
+    );
+  }
+
+  late final _wire_smtc_shuffle_request_eventPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer)>>('wire_smtc_shuffle_request_event');
+  late final _wire_smtc_shuffle_request_event = _wire_smtc_shuffle_request_eventPtr.asFunction<void Function(int, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer)>();
+
+  void wire_smtc_repeat_mode_request_event(
+    int port_,
+    wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+  ) {
+    return _wire_smtc_repeat_mode_request_event(
+      port_,
+      media_player,
+    );
+  }
+
+  late final _wire_smtc_repeat_mode_request_eventPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer)>>('wire_smtc_repeat_mode_request_event');
+  late final _wire_smtc_repeat_mode_request_event = _wire_smtc_repeat_mode_request_eventPtr.asFunction<void Function(int, wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer)>();
 
   void wire_initialize_media_player(
     int port_,
@@ -336,6 +511,13 @@ class SmtcWindowsWire implements FlutterRustBridgeWireBase {
   late final _wire_repeat_mode_request_eventPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_repeat_mode_request_event');
   late final _wire_repeat_mode_request_event = _wire_repeat_mode_request_eventPtr.asFunction<void Function(int)>();
 
+  wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer new_StdSyncMutexWindowsMediaPlaybackMediaPlayer() {
+    return _new_StdSyncMutexWindowsMediaPlaybackMediaPlayer();
+  }
+
+  late final _new_StdSyncMutexWindowsMediaPlaybackMediaPlayerPtr = _lookup<ffi.NativeFunction<wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer Function()>>('new_StdSyncMutexWindowsMediaPlaybackMediaPlayer');
+  late final _new_StdSyncMutexWindowsMediaPlaybackMediaPlayer = _new_StdSyncMutexWindowsMediaPlaybackMediaPlayerPtr.asFunction<wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer Function()>();
+
   ffi.Pointer<ffi.Int64> new_box_autoadd_i64_0(
     int value,
   ) {
@@ -379,6 +561,28 @@ class SmtcWindowsWire implements FlutterRustBridgeWireBase {
   late final _new_uint_8_list_0Ptr = _lookup<ffi.NativeFunction<ffi.Pointer<wire_uint_8_list> Function(ffi.Int32)>>('new_uint_8_list_0');
   late final _new_uint_8_list_0 = _new_uint_8_list_0Ptr.asFunction<ffi.Pointer<wire_uint_8_list> Function(int)>();
 
+  void drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(
+      ptr,
+    );
+  }
+
+  late final _drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayerPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer');
+  late final _drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer = _drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayerPtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  ffi.Pointer<ffi.Void> share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(
+      ptr,
+    );
+  }
+
+  late final _share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayerPtr = _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>>('share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer');
+  late final _share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer = _share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayerPtr.asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
   void free_WireSyncReturn(
     WireSyncReturn ptr,
   ) {
@@ -392,6 +596,10 @@ class SmtcWindowsWire implements FlutterRustBridgeWireBase {
 }
 
 class _Dart_Handle extends ffi.Opaque {}
+
+class wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> ptr;
+}
 
 class wire_SMTCConfig extends ffi.Struct {
   @ffi.Bool()
@@ -416,21 +624,6 @@ class wire_SMTCConfig extends ffi.Struct {
   external bool rewind_enabled;
 }
 
-class wire_PlaybackTimeline extends ffi.Struct {
-  @ffi.Int64()
-  external int start_time_ms;
-
-  @ffi.Int64()
-  external int end_time_ms;
-
-  @ffi.Int64()
-  external int position_ms;
-
-  external ffi.Pointer<ffi.Int64> min_seek_time_ms;
-
-  external ffi.Pointer<ffi.Int64> max_seek_time_ms;
-}
-
 class wire_uint_8_list extends ffi.Struct {
   external ffi.Pointer<ffi.Uint8> ptr;
 
@@ -451,6 +644,21 @@ class wire_MusicMetadata extends ffi.Struct {
   external int track_number;
 
   external ffi.Pointer<wire_uint_8_list> thumbnail;
+}
+
+class wire_PlaybackTimeline extends ffi.Struct {
+  @ffi.Int64()
+  external int start_time_ms;
+
+  @ffi.Int64()
+  external int end_time_ms;
+
+  @ffi.Int64()
+  external int position_ms;
+
+  external ffi.Pointer<ffi.Int64> min_seek_time_ms;
+
+  external ffi.Pointer<ffi.Int64> max_seek_time_ms;
 }
 
 typedef DartPostCObjectFnType = ffi.Pointer<ffi.NativeFunction<ffi.Bool Function(DartPort port_id, ffi.Pointer<ffi.Void> message)>>;

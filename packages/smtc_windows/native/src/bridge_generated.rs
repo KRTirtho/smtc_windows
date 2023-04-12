@@ -25,6 +25,223 @@ use crate::timeline::PlaybackTimeline;
 
 // Section: wire functions
 
+fn wire_smtc_new_impl() -> support::WireSyncReturn {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync(
+        WrapInfo {
+            debug_name: "smtc_new",
+            port: None,
+            mode: FfiCallMode::Sync,
+        },
+        move || smtc_new(),
+    )
+}
+fn wire_smtc_update_config_impl(
+    port_: MessagePort,
+    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
+        + UnwindSafe,
+    config: impl Wire2Api<SMTCConfig> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "smtc_update_config",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_media_player = media_player.wire2api();
+            let api_config = config.wire2api();
+            move |task_callback| smtc_update_config(api_media_player, api_config)
+        },
+    )
+}
+fn wire_smtc_update_metadata_impl(
+    port_: MessagePort,
+    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
+        + UnwindSafe,
+    metadata: impl Wire2Api<MusicMetadata> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "smtc_update_metadata",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_media_player = media_player.wire2api();
+            let api_metadata = metadata.wire2api();
+            move |task_callback| smtc_update_metadata(api_media_player, api_metadata)
+        },
+    )
+}
+fn wire_smtc_update_timeline_impl(
+    port_: MessagePort,
+    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
+        + UnwindSafe,
+    timeline: impl Wire2Api<PlaybackTimeline> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "smtc_update_timeline",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_media_player = media_player.wire2api();
+            let api_timeline = timeline.wire2api();
+            move |task_callback| smtc_update_timeline(api_media_player, api_timeline)
+        },
+    )
+}
+fn wire_smtc_update_playback_status_impl(
+    port_: MessagePort,
+    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
+        + UnwindSafe,
+    status: impl Wire2Api<PlaybackStatus> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "smtc_update_playback_status",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_media_player = media_player.wire2api();
+            let api_status = status.wire2api();
+            move |task_callback| smtc_update_playback_status(api_media_player, api_status)
+        },
+    )
+}
+fn wire_smtc_update_shuffle_impl(
+    port_: MessagePort,
+    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
+        + UnwindSafe,
+    shuffle: impl Wire2Api<bool> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "smtc_update_shuffle",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_media_player = media_player.wire2api();
+            let api_shuffle = shuffle.wire2api();
+            move |task_callback| smtc_update_shuffle(api_media_player, api_shuffle)
+        },
+    )
+}
+fn wire_smtc_update_repeat_mode_impl(
+    port_: MessagePort,
+    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
+        + UnwindSafe,
+    repeat_mode: impl Wire2Api<String> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "smtc_update_repeat_mode",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_media_player = media_player.wire2api();
+            let api_repeat_mode = repeat_mode.wire2api();
+            move |task_callback| smtc_update_repeat_mode(api_media_player, api_repeat_mode)
+        },
+    )
+}
+fn wire_smtc_disable_smtc_impl(
+    port_: MessagePort,
+    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
+        + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "smtc_disable_smtc",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_media_player = media_player.wire2api();
+            move |task_callback| smtc_disable_smtc(api_media_player)
+        },
+    )
+}
+fn wire_smtc_button_press_event_impl(
+    port_: MessagePort,
+    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
+        + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "smtc_button_press_event",
+            port: Some(port_),
+            mode: FfiCallMode::Stream,
+        },
+        move || {
+            let api_media_player = media_player.wire2api();
+            move |task_callback| {
+                smtc_button_press_event(api_media_player, task_callback.stream_sink())
+            }
+        },
+    )
+}
+fn wire_smtc_position_change_request_event_impl(
+    port_: MessagePort,
+    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
+        + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "smtc_position_change_request_event",
+            port: Some(port_),
+            mode: FfiCallMode::Stream,
+        },
+        move || {
+            let api_media_player = media_player.wire2api();
+            move |task_callback| {
+                smtc_position_change_request_event(api_media_player, task_callback.stream_sink())
+            }
+        },
+    )
+}
+fn wire_smtc_shuffle_request_event_impl(
+    port_: MessagePort,
+    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
+        + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "smtc_shuffle_request_event",
+            port: Some(port_),
+            mode: FfiCallMode::Stream,
+        },
+        move || {
+            let api_media_player = media_player.wire2api();
+            move |task_callback| {
+                smtc_shuffle_request_event(api_media_player, task_callback.stream_sink())
+            }
+        },
+    )
+}
+fn wire_smtc_repeat_mode_request_event_impl(
+    port_: MessagePort,
+    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
+        + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "smtc_repeat_mode_request_event",
+            port: Some(port_),
+            mode: FfiCallMode::Stream,
+        },
+        move || {
+            let api_media_player = media_player.wire2api();
+            move |task_callback| {
+                smtc_repeat_mode_request_event(api_media_player, task_callback.stream_sink())
+            }
+        },
+    )
+}
 fn wire_initialize_media_player_impl(
     port_: MessagePort,
     config: impl Wire2Api<SMTCConfig> + UnwindSafe,
@@ -262,6 +479,74 @@ mod web {
     // Section: wire functions
 
     #[wasm_bindgen]
+    pub fn wire_smtc_new() -> support::WireSyncReturn {
+        wire_smtc_new_impl()
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_smtc_update_config(port_: MessagePort, media_player: JsValue, config: JsValue) {
+        wire_smtc_update_config_impl(port_, media_player, config)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_smtc_update_metadata(port_: MessagePort, media_player: JsValue, metadata: JsValue) {
+        wire_smtc_update_metadata_impl(port_, media_player, metadata)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_smtc_update_timeline(port_: MessagePort, media_player: JsValue, timeline: JsValue) {
+        wire_smtc_update_timeline_impl(port_, media_player, timeline)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_smtc_update_playback_status(
+        port_: MessagePort,
+        media_player: JsValue,
+        status: i32,
+    ) {
+        wire_smtc_update_playback_status_impl(port_, media_player, status)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_smtc_update_shuffle(port_: MessagePort, media_player: JsValue, shuffle: bool) {
+        wire_smtc_update_shuffle_impl(port_, media_player, shuffle)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_smtc_update_repeat_mode(
+        port_: MessagePort,
+        media_player: JsValue,
+        repeat_mode: String,
+    ) {
+        wire_smtc_update_repeat_mode_impl(port_, media_player, repeat_mode)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_smtc_disable_smtc(port_: MessagePort, media_player: JsValue) {
+        wire_smtc_disable_smtc_impl(port_, media_player)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_smtc_button_press_event(port_: MessagePort, media_player: JsValue) {
+        wire_smtc_button_press_event_impl(port_, media_player)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_smtc_position_change_request_event(port_: MessagePort, media_player: JsValue) {
+        wire_smtc_position_change_request_event_impl(port_, media_player)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_smtc_shuffle_request_event(port_: MessagePort, media_player: JsValue) {
+        wire_smtc_shuffle_request_event_impl(port_, media_player)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_smtc_repeat_mode_request_event(port_: MessagePort, media_player: JsValue) {
+        wire_smtc_repeat_mode_request_event_impl(port_, media_player)
+    }
+
+    #[wasm_bindgen]
     pub fn wire_initialize_media_player(port_: MessagePort, config: JsValue, timeline: JsValue) {
         wire_initialize_media_player_impl(port_, config, timeline)
     }
@@ -324,6 +609,27 @@ mod web {
     // Section: allocate functions
 
     // Section: related functions
+
+    #[wasm_bindgen]
+    pub fn drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr: *const c_void) {
+        unsafe {
+            Arc::<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>::decrement_strong_count(
+                ptr as _,
+            );
+        }
+    }
+
+    #[wasm_bindgen]
+    pub fn share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(
+        ptr: *const c_void,
+    ) -> *const c_void {
+        unsafe {
+            Arc::<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>::increment_strong_count(
+                ptr as _,
+            );
+            ptr
+        }
+    }
 
     // Section: impl Wire2Api
 
@@ -404,6 +710,16 @@ mod web {
     }
     // Section: impl Wire2Api for JsValue
 
+    impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>> for JsValue {
+        fn wire2api(self) -> RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>> {
+            #[cfg(target_pointer_width = "64")]
+            {
+                compile_error!("64-bit pointers are not supported.");
+            }
+
+            unsafe { support::opaque_from_dart((self.as_f64().unwrap() as usize) as _) }
+        }
+    }
     impl Wire2Api<String> for JsValue {
         fn wire2api(self) -> String {
             self.as_string().expect("non-UTF-8 string, or not a string")
@@ -462,6 +778,105 @@ pub use web::*;
 mod io {
     use super::*;
     // Section: wire functions
+
+    #[no_mangle]
+    pub extern "C" fn wire_smtc_new() -> support::WireSyncReturn {
+        wire_smtc_new_impl()
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_smtc_update_config(
+        port_: i64,
+        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+        config: *mut wire_SMTCConfig,
+    ) {
+        wire_smtc_update_config_impl(port_, media_player, config)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_smtc_update_metadata(
+        port_: i64,
+        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+        metadata: *mut wire_MusicMetadata,
+    ) {
+        wire_smtc_update_metadata_impl(port_, media_player, metadata)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_smtc_update_timeline(
+        port_: i64,
+        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+        timeline: *mut wire_PlaybackTimeline,
+    ) {
+        wire_smtc_update_timeline_impl(port_, media_player, timeline)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_smtc_update_playback_status(
+        port_: i64,
+        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+        status: i32,
+    ) {
+        wire_smtc_update_playback_status_impl(port_, media_player, status)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_smtc_update_shuffle(
+        port_: i64,
+        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+        shuffle: bool,
+    ) {
+        wire_smtc_update_shuffle_impl(port_, media_player, shuffle)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_smtc_update_repeat_mode(
+        port_: i64,
+        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+        repeat_mode: *mut wire_uint_8_list,
+    ) {
+        wire_smtc_update_repeat_mode_impl(port_, media_player, repeat_mode)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_smtc_disable_smtc(
+        port_: i64,
+        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+    ) {
+        wire_smtc_disable_smtc_impl(port_, media_player)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_smtc_button_press_event(
+        port_: i64,
+        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+    ) {
+        wire_smtc_button_press_event_impl(port_, media_player)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_smtc_position_change_request_event(
+        port_: i64,
+        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+    ) {
+        wire_smtc_position_change_request_event_impl(port_, media_player)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_smtc_shuffle_request_event(
+        port_: i64,
+        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+    ) {
+        wire_smtc_shuffle_request_event_impl(port_, media_player)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_smtc_repeat_mode_request_event(
+        port_: i64,
+        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+    ) {
+        wire_smtc_repeat_mode_request_event_impl(port_, media_player)
+    }
 
     #[no_mangle]
     pub extern "C" fn wire_initialize_media_player(
@@ -530,6 +945,12 @@ mod io {
     // Section: allocate functions
 
     #[no_mangle]
+    pub extern "C" fn new_StdSyncMutexWindowsMediaPlaybackMediaPlayer(
+    ) -> wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer {
+        wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer::new_with_null_ptr()
+    }
+
+    #[no_mangle]
     pub extern "C" fn new_box_autoadd_i64_0(value: i64) -> *mut i64 {
         support::new_leak_box_ptr(value)
     }
@@ -560,8 +981,36 @@ mod io {
 
     // Section: related functions
 
+    #[no_mangle]
+    pub extern "C" fn drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr: *const c_void) {
+        unsafe {
+            Arc::<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>::decrement_strong_count(
+                ptr as _,
+            );
+        }
+    }
+
+    #[no_mangle]
+    pub extern "C" fn share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(
+        ptr: *const c_void,
+    ) -> *const c_void {
+        unsafe {
+            Arc::<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>::increment_strong_count(
+                ptr as _,
+            );
+            ptr
+        }
+    }
+
     // Section: impl Wire2Api
 
+    impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
+        for wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer
+    {
+        fn wire2api(self) -> RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>> {
+            unsafe { support::opaque_from_dart(self.ptr as _) }
+        }
+    }
     impl Wire2Api<String> for *mut wire_uint_8_list {
         fn wire2api(self) -> String {
             let vec: Vec<u8> = self.wire2api();
@@ -643,6 +1092,12 @@ mod io {
 
     #[repr(C)]
     #[derive(Clone)]
+    pub struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer {
+        ptr: *const core::ffi::c_void,
+    }
+
+    #[repr(C)]
+    #[derive(Clone)]
     pub struct wire_MusicMetadata {
         title: *mut wire_uint_8_list,
         artist: *mut wire_uint_8_list,
@@ -690,6 +1145,14 @@ mod io {
     impl<T> NewWithNullPtr for *mut T {
         fn new_with_null_ptr() -> Self {
             std::ptr::null_mut()
+        }
+    }
+
+    impl NewWithNullPtr for wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer {
+        fn new_with_null_ptr() -> Self {
+            Self {
+                ptr: core::ptr::null(),
+            }
         }
     }
 

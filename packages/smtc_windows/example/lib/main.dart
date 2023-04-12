@@ -18,9 +18,11 @@ class _MyAppState extends State<MyApp> {
   late int sumResult;
   late Future<int> sumAsyncResult;
 
+  late ConventionalSMTC smtc;
+
   @override
   void initState() {
-    SMTCWindows.initialize(
+    smtc = ConventionalSMTC(
       timeline: const PlaybackTimeline(
         startTimeMs: 0,
         endTimeMs: 1000,
@@ -30,48 +32,58 @@ class _MyAppState extends State<MyApp> {
       ),
     );
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await SMTCWindows.updateTimeline(
-        const PlaybackTimeline(
-          startTimeMs: 0,
-          endTimeMs: 1000,
-          positionMs: 500,
-          minSeekTimeMs: 0,
-          maxSeekTimeMs: 1000,
-        ),
-      );
+      try {
+        await smtc.updateTimeline(
+          const PlaybackTimeline(
+            startTimeMs: 0,
+            endTimeMs: 1000,
+            positionMs: 500,
+            minSeekTimeMs: 0,
+            maxSeekTimeMs: 1000,
+          ),
+        );
 
-      await SMTCWindows.updateMetadata(
-        const MusicMetadata(
-          title: 'Title',
-          album: 'Album',
-          albumArtist: 'Album Artist',
-          artist: 'Artist',
-          thumbnail:
-              'https://media.glamour.com/photos/5f4c44e20c71c58fc210d35f/master/w_2560%2Cc_limit/mgid_ao_image_mtv.jpg',
-          trackNumber: 1,
-        ),
-      );
+        await smtc.updateMetadata(
+          const MusicMetadata(
+            title: 'Title',
+            album: 'Album',
+            albumArtist: 'Album Artist',
+            artist: 'Artist',
+            thumbnail:
+                'https://media.glamour.com/photos/5f4c44e20c71c58fc210d35f/master/w_2560%2Cc_limit/mgid_ao_image_mtv.jpg',
+            trackNumber: 1,
+          ),
+        );
 
-      SMTCWindows.buttonPressStream.listen((event) {
-        switch (event) {
-          case PressedButton.play:
-            SMTCWindows.setPlaybackStatus(PlaybackStatus.Playing);
-            break;
-          case PressedButton.pause:
-            SMTCWindows.setPlaybackStatus(PlaybackStatus.Paused);
-            break;
-          case PressedButton.next:
-            print('Next');
-            break;
-          case PressedButton.previous:
-            print('Previous');
-            break;
-          default:
-            break;
-        }
-      });
+        smtc.buttonPressStream.listen((event) {
+          switch (event) {
+            case PressedButton.play:
+              SMTCWindows.setPlaybackStatus(PlaybackStatus.Playing);
+              break;
+            case PressedButton.pause:
+              SMTCWindows.setPlaybackStatus(PlaybackStatus.Paused);
+              break;
+            case PressedButton.next:
+              print('Next');
+              break;
+            case PressedButton.previous:
+              print('Previous');
+              break;
+            default:
+              break;
+          }
+        });
+      } catch (e) {
+        debugPrint("Error: $e");
+      }
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    smtc.dispose();
+    super.dispose();
   }
 
   @override

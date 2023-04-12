@@ -19,6 +19,11 @@ class SmtcWindowsPlatform extends FlutterRustBridgeBase<SmtcWindowsWire> with Fl
 // Section: api2wire
 
   @protected
+  Object api2wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(StdSyncMutexWindowsMediaPlaybackMediaPlayer raw) {
+    return raw.shareOrMove();
+  }
+
+  @protected
   String api2wire_String(String raw) {
     return raw;
   }
@@ -99,6 +104,9 @@ class SmtcWindowsPlatform extends FlutterRustBridgeBase<SmtcWindowsWire> with Fl
     return raw;
   }
 // Section: finalizer
+
+  late final Finalizer<PlatformPointer> _StdSyncMutexWindowsMediaPlaybackMediaPlayerFinalizer = Finalizer<PlatformPointer>(inner.drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer);
+  Finalizer<PlatformPointer> get StdSyncMutexWindowsMediaPlaybackMediaPlayerFinalizer => _StdSyncMutexWindowsMediaPlaybackMediaPlayerFinalizer;
 }
 
 // Section: WASM wire module
@@ -111,6 +119,30 @@ external SmtcWindowsWasmModule get wasmModule;
 class SmtcWindowsWasmModule implements WasmModule {
   external Object /* Promise */ call([String? moduleName]);
   external SmtcWindowsWasmModule bind(dynamic thisArg, String moduleName);
+  external dynamic /* Object */ wire_smtc_new();
+
+  external dynamic /* void */ wire_smtc_update_config(NativePortType port_, Object media_player, List<dynamic> config);
+
+  external dynamic /* void */ wire_smtc_update_metadata(NativePortType port_, Object media_player, List<dynamic> metadata);
+
+  external dynamic /* void */ wire_smtc_update_timeline(NativePortType port_, Object media_player, List<dynamic> timeline);
+
+  external dynamic /* void */ wire_smtc_update_playback_status(NativePortType port_, Object media_player, int status);
+
+  external dynamic /* void */ wire_smtc_update_shuffle(NativePortType port_, Object media_player, bool shuffle);
+
+  external dynamic /* void */ wire_smtc_update_repeat_mode(NativePortType port_, Object media_player, String repeat_mode);
+
+  external dynamic /* void */ wire_smtc_disable_smtc(NativePortType port_, Object media_player);
+
+  external dynamic /* void */ wire_smtc_button_press_event(NativePortType port_, Object media_player);
+
+  external dynamic /* void */ wire_smtc_position_change_request_event(NativePortType port_, Object media_player);
+
+  external dynamic /* void */ wire_smtc_shuffle_request_event(NativePortType port_, Object media_player);
+
+  external dynamic /* void */ wire_smtc_repeat_mode_request_event(NativePortType port_, Object media_player);
+
   external dynamic /* void */ wire_initialize_media_player(NativePortType port_, List<dynamic> config, List<dynamic> timeline);
 
   external dynamic /* void */ wire_update_config(NativePortType port_, List<dynamic> config);
@@ -134,12 +166,40 @@ class SmtcWindowsWasmModule implements WasmModule {
   external dynamic /* void */ wire_shuffle_request_event(NativePortType port_);
 
   external dynamic /* void */ wire_repeat_mode_request_event(NativePortType port_);
+
+  external dynamic /*  */ drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr);
+
+  external int /* *const c_void */ share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr);
 }
 
 // Section: WASM wire connector
 
 class SmtcWindowsWire extends FlutterRustBridgeWasmWireBase<SmtcWindowsWasmModule> {
   SmtcWindowsWire(FutureOr<WasmModule> module) : super(WasmModule.cast<SmtcWindowsWasmModule>(module));
+
+  dynamic /* Object */ wire_smtc_new() => wasmModule.wire_smtc_new();
+
+  void wire_smtc_update_config(NativePortType port_, Object media_player, List<dynamic> config) => wasmModule.wire_smtc_update_config(port_, media_player, config);
+
+  void wire_smtc_update_metadata(NativePortType port_, Object media_player, List<dynamic> metadata) => wasmModule.wire_smtc_update_metadata(port_, media_player, metadata);
+
+  void wire_smtc_update_timeline(NativePortType port_, Object media_player, List<dynamic> timeline) => wasmModule.wire_smtc_update_timeline(port_, media_player, timeline);
+
+  void wire_smtc_update_playback_status(NativePortType port_, Object media_player, int status) => wasmModule.wire_smtc_update_playback_status(port_, media_player, status);
+
+  void wire_smtc_update_shuffle(NativePortType port_, Object media_player, bool shuffle) => wasmModule.wire_smtc_update_shuffle(port_, media_player, shuffle);
+
+  void wire_smtc_update_repeat_mode(NativePortType port_, Object media_player, String repeat_mode) => wasmModule.wire_smtc_update_repeat_mode(port_, media_player, repeat_mode);
+
+  void wire_smtc_disable_smtc(NativePortType port_, Object media_player) => wasmModule.wire_smtc_disable_smtc(port_, media_player);
+
+  void wire_smtc_button_press_event(NativePortType port_, Object media_player) => wasmModule.wire_smtc_button_press_event(port_, media_player);
+
+  void wire_smtc_position_change_request_event(NativePortType port_, Object media_player) => wasmModule.wire_smtc_position_change_request_event(port_, media_player);
+
+  void wire_smtc_shuffle_request_event(NativePortType port_, Object media_player) => wasmModule.wire_smtc_shuffle_request_event(port_, media_player);
+
+  void wire_smtc_repeat_mode_request_event(NativePortType port_, Object media_player) => wasmModule.wire_smtc_repeat_mode_request_event(port_, media_player);
 
   void wire_initialize_media_player(NativePortType port_, List<dynamic> config, List<dynamic> timeline) => wasmModule.wire_initialize_media_player(port_, config, timeline);
 
@@ -164,4 +224,8 @@ class SmtcWindowsWire extends FlutterRustBridgeWasmWireBase<SmtcWindowsWasmModul
   void wire_shuffle_request_event(NativePortType port_) => wasmModule.wire_shuffle_request_event(port_);
 
   void wire_repeat_mode_request_event(NativePortType port_) => wasmModule.wire_repeat_mode_request_event(port_);
+
+  dynamic /*  */ drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr) => wasmModule.drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr);
+
+  int /* *const c_void */ share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr) => wasmModule.share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr);
 }
