@@ -255,6 +255,32 @@ class SmtcWindowsWire implements FlutterRustBridgeWireBase {
   late final _wire_update_playback_statusPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Int32)>>('wire_update_playback_status');
   late final _wire_update_playback_status = _wire_update_playback_statusPtr.asFunction<void Function(int, int)>();
 
+  void wire_update_shuffle(
+    int port_,
+    bool shuffle,
+  ) {
+    return _wire_update_shuffle(
+      port_,
+      shuffle,
+    );
+  }
+
+  late final _wire_update_shufflePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Bool)>>('wire_update_shuffle');
+  late final _wire_update_shuffle = _wire_update_shufflePtr.asFunction<void Function(int, bool)>();
+
+  void wire_update_repeat_mode(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> repeat_mode,
+  ) {
+    return _wire_update_repeat_mode(
+      port_,
+      repeat_mode,
+    );
+  }
+
+  late final _wire_update_repeat_modePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_update_repeat_mode');
+  late final _wire_update_repeat_mode = _wire_update_repeat_modePtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
   void wire_disable_smtc(
     int port_,
   ) {
@@ -265,6 +291,50 @@ class SmtcWindowsWire implements FlutterRustBridgeWireBase {
 
   late final _wire_disable_smtcPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_disable_smtc');
   late final _wire_disable_smtc = _wire_disable_smtcPtr.asFunction<void Function(int)>();
+
+  void wire_button_press_event(
+    int port_,
+  ) {
+    return _wire_button_press_event(
+      port_,
+    );
+  }
+
+  late final _wire_button_press_eventPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_button_press_event');
+  late final _wire_button_press_event = _wire_button_press_eventPtr.asFunction<void Function(int)>();
+
+  void wire_position_change_request_event(
+    int port_,
+  ) {
+    return _wire_position_change_request_event(
+      port_,
+    );
+  }
+
+  late final _wire_position_change_request_eventPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_position_change_request_event');
+  late final _wire_position_change_request_event = _wire_position_change_request_eventPtr.asFunction<void Function(int)>();
+
+  void wire_shuffle_request_event(
+    int port_,
+  ) {
+    return _wire_shuffle_request_event(
+      port_,
+    );
+  }
+
+  late final _wire_shuffle_request_eventPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_shuffle_request_event');
+  late final _wire_shuffle_request_event = _wire_shuffle_request_eventPtr.asFunction<void Function(int)>();
+
+  void wire_repeat_mode_request_event(
+    int port_,
+  ) {
+    return _wire_repeat_mode_request_event(
+      port_,
+    );
+  }
+
+  late final _wire_repeat_mode_request_eventPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_repeat_mode_request_event');
+  late final _wire_repeat_mode_request_event = _wire_repeat_mode_request_eventPtr.asFunction<void Function(int)>();
 
   ffi.Pointer<ffi.Int64> new_box_autoadd_i64_0(
     int value,

@@ -65,7 +65,19 @@ void wire_update_timeline(int64_t port_, struct wire_PlaybackTimeline *timeline)
 
 void wire_update_playback_status(int64_t port_, int32_t status);
 
+void wire_update_shuffle(int64_t port_, bool shuffle);
+
+void wire_update_repeat_mode(int64_t port_, struct wire_uint_8_list *repeat_mode);
+
 void wire_disable_smtc(int64_t port_);
+
+void wire_button_press_event(int64_t port_);
+
+void wire_position_change_request_event(int64_t port_);
+
+void wire_shuffle_request_event(int64_t port_);
+
+void wire_repeat_mode_request_event(int64_t port_);
 
 int64_t *new_box_autoadd_i64_0(int64_t value);
 
@@ -86,7 +98,13 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) wire_update_metadata);
     dummy_var ^= ((int64_t) (void*) wire_update_timeline);
     dummy_var ^= ((int64_t) (void*) wire_update_playback_status);
+    dummy_var ^= ((int64_t) (void*) wire_update_shuffle);
+    dummy_var ^= ((int64_t) (void*) wire_update_repeat_mode);
     dummy_var ^= ((int64_t) (void*) wire_disable_smtc);
+    dummy_var ^= ((int64_t) (void*) wire_button_press_event);
+    dummy_var ^= ((int64_t) (void*) wire_position_change_request_event);
+    dummy_var ^= ((int64_t) (void*) wire_shuffle_request_event);
+    dummy_var ^= ((int64_t) (void*) wire_repeat_mode_request_event);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_i64_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_music_metadata_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_playback_timeline_0);

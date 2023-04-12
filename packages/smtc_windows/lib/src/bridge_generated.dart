@@ -36,9 +36,33 @@ abstract class SmtcWindows {
 
   FlutterRustBridgeTaskConstMeta get kUpdatePlaybackStatusConstMeta;
 
+  Future<void> updateShuffle({required bool shuffle, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kUpdateShuffleConstMeta;
+
+  Future<void> updateRepeatMode({required String repeatMode, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kUpdateRepeatModeConstMeta;
+
   Future<void> disableSmtc({dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kDisableSmtcConstMeta;
+
+  Stream<String> buttonPressEvent({dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kButtonPressEventConstMeta;
+
+  Stream<int> positionChangeRequestEvent({dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kPositionChangeRequestEventConstMeta;
+
+  Stream<bool> shuffleRequestEvent({dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kShuffleRequestEventConstMeta;
+
+  Stream<String> repeatModeRequestEvent({dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kRepeatModeRequestEventConstMeta;
 }
 
 class MusicMetadata {
@@ -213,6 +237,46 @@ class SmtcWindowsImpl implements SmtcWindows {
         ],
       );
 
+  Future<void> updateShuffle({required bool shuffle, dynamic hint}) {
+    var arg0 = shuffle;
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_update_shuffle(port_, arg0),
+      parseSuccessData: _wire2api_unit,
+      constMeta: kUpdateShuffleConstMeta,
+      argValues: [
+        shuffle
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kUpdateShuffleConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "update_shuffle",
+        argNames: [
+          "shuffle"
+        ],
+      );
+
+  Future<void> updateRepeatMode({required String repeatMode, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(repeatMode);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_update_repeat_mode(port_, arg0),
+      parseSuccessData: _wire2api_unit,
+      constMeta: kUpdateRepeatModeConstMeta,
+      argValues: [
+        repeatMode
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kUpdateRepeatModeConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "update_repeat_mode",
+        argNames: [
+          "repeatMode"
+        ],
+      );
+
   Future<void> disableSmtc({dynamic hint}) {
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_disable_smtc(port_),
@@ -228,10 +292,90 @@ class SmtcWindowsImpl implements SmtcWindows {
         argNames: [],
       );
 
+  Stream<String> buttonPressEvent({dynamic hint}) {
+    return _platform.executeStream(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_button_press_event(port_),
+      parseSuccessData: _wire2api_String,
+      constMeta: kButtonPressEventConstMeta,
+      argValues: [],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kButtonPressEventConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "button_press_event",
+        argNames: [],
+      );
+
+  Stream<int> positionChangeRequestEvent({dynamic hint}) {
+    return _platform.executeStream(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_position_change_request_event(port_),
+      parseSuccessData: _wire2api_i64,
+      constMeta: kPositionChangeRequestEventConstMeta,
+      argValues: [],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kPositionChangeRequestEventConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "position_change_request_event",
+        argNames: [],
+      );
+
+  Stream<bool> shuffleRequestEvent({dynamic hint}) {
+    return _platform.executeStream(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_shuffle_request_event(port_),
+      parseSuccessData: _wire2api_bool,
+      constMeta: kShuffleRequestEventConstMeta,
+      argValues: [],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kShuffleRequestEventConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "shuffle_request_event",
+        argNames: [],
+      );
+
+  Stream<String> repeatModeRequestEvent({dynamic hint}) {
+    return _platform.executeStream(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_repeat_mode_request_event(port_),
+      parseSuccessData: _wire2api_String,
+      constMeta: kRepeatModeRequestEventConstMeta,
+      argValues: [],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kRepeatModeRequestEventConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "repeat_mode_request_event",
+        argNames: [],
+      );
+
   void dispose() {
     _platform.dispose();
   }
 // Section: wire2api
+
+  String _wire2api_String(dynamic raw) {
+    return raw as String;
+  }
+
+  bool _wire2api_bool(dynamic raw) {
+    return raw as bool;
+  }
+
+  int _wire2api_i64(dynamic raw) {
+    return castInt(raw);
+  }
+
+  int _wire2api_u8(dynamic raw) {
+    return raw as int;
+  }
+
+  Uint8List _wire2api_uint_8_list(dynamic raw) {
+    return raw as Uint8List;
+  }
 
   void _wire2api_unit(dynamic raw) {
     return;

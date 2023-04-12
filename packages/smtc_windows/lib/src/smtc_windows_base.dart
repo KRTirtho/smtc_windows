@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:smtc_windows/src/bridge_generated.dart';
+import 'package:smtc_windows/src/enums/button_event.dart';
+import 'package:smtc_windows/src/enums/repeat_mode.dart';
 import 'package:smtc_windows/src/ffi.dart';
 import 'package:smtc_windows/src/extensions.dart';
 
@@ -26,6 +30,13 @@ class SMTCWindows {
   MusicMetadata _metadata;
   PlaybackStatus _status;
 
+  Stream<PressedButton>? _buttonPressedStream;
+  Stream<bool>? _shuffleChangeStream;
+  Stream<RepeatMode>? _repeatModeChangeStream;
+
+  bool _shuffleEnabled = false;
+  RepeatMode _repeatMode = RepeatMode.none;
+
   factory SMTCWindows() {
     if (_instance == null) {
       throw StateError('SMTCWindows has not been initialized');
@@ -40,6 +51,11 @@ class SMTCWindows {
   static PlaybackTimeline get timeline => instance._timeline;
   static MusicMetadata get metadata => instance._metadata;
   static PlaybackStatus get status => instance._status;
+  static Stream<PressedButton> get buttonPressStream =>
+      instance._buttonPressedStream!;
+  static Stream<bool> get shuffleChangeStream => instance._shuffleChangeStream!;
+  static Stream<RepeatMode> get repeatModeChangeStream =>
+      instance._repeatModeChangeStream!;
 
   static bool get isPlayEnabled => config.playEnabled;
   static bool get isPauseEnabled => config.pauseEnabled;
@@ -48,6 +64,9 @@ class SMTCWindows {
   static bool get isPrevEnabled => config.prevEnabled;
   static bool get isFastForwardEnabled => config.fastForwardEnabled;
   static bool get isRewindEnabled => config.rewindEnabled;
+
+  static bool get isShuffleEnabled => instance._shuffleEnabled;
+  static RepeatMode get repeatMode => instance._repeatMode;
 
   static Duration get startTime => Duration(milliseconds: timeline.startTimeMs);
   static Duration get endTime => Duration(milliseconds: timeline.endTimeMs);
@@ -70,9 +89,19 @@ class SMTCWindows {
       fastForwardEnabled: false,
       rewindEnabled: false,
     ),
-  }) {
+  }) async {
     _instance ??= SMTCWindows._(config: config, timeline: timeline);
-    return _api.initializeMediaPlayer(config: config, timeline: timeline);
+    await _api.initializeMediaPlayer(config: config, timeline: timeline);
+    instance._buttonPressedStream ??= _api
+        .buttonPressEvent()
+        .map((event) => PressedButton.fromString(event))
+        .asBroadcastStream();
+    instance._shuffleChangeStream ??=
+        _api.shuffleRequestEvent().asBroadcastStream();
+    instance._repeatModeChangeStream ??= _api
+        .repeatModeRequestEvent()
+        .map(RepeatMode.fromString)
+        .asBroadcastStream();
   }
 
   static Future<void> updateConfig(SMTCConfig config) {
@@ -185,5 +214,15 @@ class SMTCWindows {
     return updateTimeline(
       timeline.copyWith(minSeekTimeMs: minSeekTime.inMilliseconds),
     );
+  }
+
+  static Future<void> setShuffleEnabled(bool enabled) {
+    instance._shuffleEnabled = enabled;
+    return _api.updateShuffle(shuffle: enabled);
+  }
+
+  static Future<void> setRepeatMode(RepeatMode repeatMode) {
+    instance._repeatMode = repeatMode;
+    return _api.updateRepeatMode(repeatMode: repeatMode.asString);
   }
 }

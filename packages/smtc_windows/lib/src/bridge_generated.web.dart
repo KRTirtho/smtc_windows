@@ -121,7 +121,19 @@ class SmtcWindowsWasmModule implements WasmModule {
 
   external dynamic /* void */ wire_update_playback_status(NativePortType port_, int status);
 
+  external dynamic /* void */ wire_update_shuffle(NativePortType port_, bool shuffle);
+
+  external dynamic /* void */ wire_update_repeat_mode(NativePortType port_, String repeat_mode);
+
   external dynamic /* void */ wire_disable_smtc(NativePortType port_);
+
+  external dynamic /* void */ wire_button_press_event(NativePortType port_);
+
+  external dynamic /* void */ wire_position_change_request_event(NativePortType port_);
+
+  external dynamic /* void */ wire_shuffle_request_event(NativePortType port_);
+
+  external dynamic /* void */ wire_repeat_mode_request_event(NativePortType port_);
 }
 
 // Section: WASM wire connector
@@ -139,5 +151,17 @@ class SmtcWindowsWire extends FlutterRustBridgeWasmWireBase<SmtcWindowsWasmModul
 
   void wire_update_playback_status(NativePortType port_, int status) => wasmModule.wire_update_playback_status(port_, status);
 
+  void wire_update_shuffle(NativePortType port_, bool shuffle) => wasmModule.wire_update_shuffle(port_, shuffle);
+
+  void wire_update_repeat_mode(NativePortType port_, String repeat_mode) => wasmModule.wire_update_repeat_mode(port_, repeat_mode);
+
   void wire_disable_smtc(NativePortType port_) => wasmModule.wire_disable_smtc(port_);
+
+  void wire_button_press_event(NativePortType port_) => wasmModule.wire_button_press_event(port_);
+
+  void wire_position_change_request_event(NativePortType port_) => wasmModule.wire_position_change_request_event(port_);
+
+  void wire_shuffle_request_event(NativePortType port_) => wasmModule.wire_shuffle_request_event(port_);
+
+  void wire_repeat_mode_request_event(NativePortType port_) => wasmModule.wire_repeat_mode_request_event(port_);
 }

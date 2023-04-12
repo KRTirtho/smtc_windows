@@ -13,35 +13,6 @@ use crate::{
 };
 
 fn main() {
-    // let handler = TypedEventHandler::<
-    //     SystemMediaTransportControls,
-    //     SystemMediaTransportControlsButtonPressedEventArgs,
-    // >::new(|smtc, args| {
-    //     let smtc = smtc.as_ref().unwrap();
-    //     let button = args.as_ref().unwrap().Button().unwrap();
-
-    //     match button {
-    //         SystemMediaTransportControlsButton::Play => {
-    //             smtc.SetPlaybackStatus(MediaPlaybackStatus::Playing)
-    //                 .unwrap();
-    //         }
-    //         SystemMediaTransportControlsButton::Pause => {
-    //             smtc.SetPlaybackStatus(MediaPlaybackStatus::Paused).unwrap();
-    //         }
-    //         SystemMediaTransportControlsButton::Next => {
-    //             println!("Next");
-    //         }
-    //         SystemMediaTransportControlsButton::Previous => {
-    //             println!("Previous");
-    //         }
-    //         _ => {}
-    //     }
-
-    //     Ok(())
-    // });
-
-    // smtc.ButtonPressed(&handler).unwrap();
-
     let smtc_config = SMTCConfig::default();
     let timeline = PlaybackTimeline {
         start_time_ms: 0,

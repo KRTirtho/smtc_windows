@@ -104,6 +104,35 @@ fn wire_update_playback_status_impl(
         },
     )
 }
+fn wire_update_shuffle_impl(port_: MessagePort, shuffle: impl Wire2Api<bool> + UnwindSafe) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "update_shuffle",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_shuffle = shuffle.wire2api();
+            move |task_callback| update_shuffle(api_shuffle)
+        },
+    )
+}
+fn wire_update_repeat_mode_impl(
+    port_: MessagePort,
+    repeat_mode: impl Wire2Api<String> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "update_repeat_mode",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_repeat_mode = repeat_mode.wire2api();
+            move |task_callback| update_repeat_mode(api_repeat_mode)
+        },
+    )
+}
 fn wire_disable_smtc_impl(port_: MessagePort) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {
@@ -112,6 +141,46 @@ fn wire_disable_smtc_impl(port_: MessagePort) {
             mode: FfiCallMode::Normal,
         },
         move || move |task_callback| disable_smtc(),
+    )
+}
+fn wire_button_press_event_impl(port_: MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "button_press_event",
+            port: Some(port_),
+            mode: FfiCallMode::Stream,
+        },
+        move || move |task_callback| button_press_event(task_callback.stream_sink()),
+    )
+}
+fn wire_position_change_request_event_impl(port_: MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "position_change_request_event",
+            port: Some(port_),
+            mode: FfiCallMode::Stream,
+        },
+        move || move |task_callback| position_change_request_event(task_callback.stream_sink()),
+    )
+}
+fn wire_shuffle_request_event_impl(port_: MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "shuffle_request_event",
+            port: Some(port_),
+            mode: FfiCallMode::Stream,
+        },
+        move || move |task_callback| shuffle_request_event(task_callback.stream_sink()),
+    )
+}
+fn wire_repeat_mode_request_event_impl(port_: MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "repeat_mode_request_event",
+            port: Some(port_),
+            mode: FfiCallMode::Stream,
+        },
+        move || move |task_callback| repeat_mode_request_event(task_callback.stream_sink()),
     )
 }
 // Section: wrapper structs
@@ -218,8 +287,38 @@ mod web {
     }
 
     #[wasm_bindgen]
+    pub fn wire_update_shuffle(port_: MessagePort, shuffle: bool) {
+        wire_update_shuffle_impl(port_, shuffle)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_update_repeat_mode(port_: MessagePort, repeat_mode: String) {
+        wire_update_repeat_mode_impl(port_, repeat_mode)
+    }
+
+    #[wasm_bindgen]
     pub fn wire_disable_smtc(port_: MessagePort) {
         wire_disable_smtc_impl(port_)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_button_press_event(port_: MessagePort) {
+        wire_button_press_event_impl(port_)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_position_change_request_event(port_: MessagePort) {
+        wire_position_change_request_event_impl(port_)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_shuffle_request_event(port_: MessagePort) {
+        wire_shuffle_request_event_impl(port_)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_repeat_mode_request_event(port_: MessagePort) {
+        wire_repeat_mode_request_event_impl(port_)
     }
 
     // Section: allocate functions
@@ -394,8 +493,38 @@ mod io {
     }
 
     #[no_mangle]
+    pub extern "C" fn wire_update_shuffle(port_: i64, shuffle: bool) {
+        wire_update_shuffle_impl(port_, shuffle)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_update_repeat_mode(port_: i64, repeat_mode: *mut wire_uint_8_list) {
+        wire_update_repeat_mode_impl(port_, repeat_mode)
+    }
+
+    #[no_mangle]
     pub extern "C" fn wire_disable_smtc(port_: i64) {
         wire_disable_smtc_impl(port_)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_button_press_event(port_: i64) {
+        wire_button_press_event_impl(port_)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_position_change_request_event(port_: i64) {
+        wire_position_change_request_event_impl(port_)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_shuffle_request_event(port_: i64) {
+        wire_shuffle_request_event_impl(port_)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_repeat_mode_request_event(port_: i64) {
+        wire_repeat_mode_request_event_impl(port_)
     }
 
     // Section: allocate functions

@@ -51,6 +51,25 @@ class _MyAppState extends State<MyApp> {
           trackNumber: 1,
         ),
       );
+
+      SMTCWindows.buttonPressStream.listen((event) {
+        switch (event) {
+          case PressedButton.play:
+            SMTCWindows.setPlaybackStatus(PlaybackStatus.Playing);
+            break;
+          case PressedButton.pause:
+            SMTCWindows.setPlaybackStatus(PlaybackStatus.Paused);
+            break;
+          case PressedButton.next:
+            print('Next');
+            break;
+          case PressedButton.previous:
+            print('Previous');
+            break;
+          default:
+            break;
+        }
+      });
     });
     super.initState();
   }

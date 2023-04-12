@@ -1,10 +1,14 @@
 use std::sync::Mutex;
 
+use flutter_rust_bridge::StreamSink;
 use lazy_static::lazy_static;
 use windows::{
-    Foundation,
+    Foundation::{self, TypedEventHandler},
     Media::{
-        MediaPlaybackStatus, MediaPlaybackType, Playback::MediaPlayer,
+        AutoRepeatModeChangeRequestedEventArgs, MediaPlaybackAutoRepeatMode, MediaPlaybackStatus,
+        MediaPlaybackType, Playback::MediaPlayer, PlaybackPositionChangeRequestedEventArgs,
+        ShuffleEnabledChangeRequestedEventArgs, SystemMediaTransportControls,
+        SystemMediaTransportControlsButton, SystemMediaTransportControlsButtonPressedEventArgs,
         SystemMediaTransportControlsTimelineProperties,
     },
     Storage::Streams::RandomAccessStreamReference,
@@ -12,13 +16,11 @@ use windows::{
 
 use super::{config::SMTCConfig, metadata::MusicMetadata, timeline::PlaybackTimeline};
 
-
 lazy_static! {
     static ref MEDIA_PLAYER: Mutex<MediaPlayer> = Mutex::new(MediaPlayer::new().unwrap());
 }
 
 #[allow(dead_code)]
-
 #[derive(Clone, Copy, Debug)]
 pub enum PlaybackStatus {
     Closed,
@@ -121,9 +123,158 @@ pub fn update_playback_status(status: PlaybackStatus) -> anyhow::Result<()> {
     Ok(())
 }
 
+pub fn update_shuffle(shuffle: bool) -> anyhow::Result<()> {
+    let media_player = MEDIA_PLAYER.lock().unwrap();
+    let smtc = media_player.SystemMediaTransportControls()?;
+    smtc.SetShuffleEnabled(shuffle)?;
+    Ok(())
+}
+
+pub fn update_repeat_mode(repeat_mode: String) -> anyhow::Result<()> {
+    let media_player = MEDIA_PLAYER.lock().unwrap();
+    let smtc = media_player.SystemMediaTransportControls()?;
+    
+    match repeat_mode.as_str() {
+        "none" => smtc.SetAutoRepeatMode(MediaPlaybackAutoRepeatMode::None)?,
+        "track" => smtc.SetAutoRepeatMode(MediaPlaybackAutoRepeatMode::Track)?,
+        "list" => smtc.SetAutoRepeatMode(MediaPlaybackAutoRepeatMode::List)?,
+        _ => smtc.SetAutoRepeatMode(MediaPlaybackAutoRepeatMode::None)?,
+    }
+    
+    Ok(())
+}
+
 pub fn disable_smtc() -> anyhow::Result<()> {
     let media_player = MEDIA_PLAYER.lock().unwrap();
     let smtc = media_player.SystemMediaTransportControls();
     smtc?.SetIsEnabled(false)?;
     Ok(())
+}
+
+pub fn button_press_event(sink: StreamSink<String>) -> anyhow::Result<()> {
+    let handler = TypedEventHandler::<
+        SystemMediaTransportControls,
+        SystemMediaTransportControlsButtonPressedEventArgs,
+    >::new(move |_, args| {
+        let button = args.as_ref().unwrap().Button().unwrap();
+
+        match button {
+            SystemMediaTransportControlsButton::Play => {
+                sink.add("play".to_string());
+            }
+            SystemMediaTransportControlsButton::Pause => {
+                sink.add("pause".to_string());
+            }
+            SystemMediaTransportControlsButton::Next => {
+                sink.add("next".to_string());
+            }
+            SystemMediaTransportControlsButton::Previous => {
+                sink.add("previous".to_string());
+            }
+            SystemMediaTransportControlsButton::FastForward => {
+                sink.add("fast_forward".to_string());
+            }
+            SystemMediaTransportControlsButton::Rewind => {
+                sink.add("rewind".to_string());
+            }
+            SystemMediaTransportControlsButton::Stop => {
+                sink.add("stop".to_string());
+            }
+            SystemMediaTransportControlsButton::Record => {
+                sink.add("record".to_string());
+            }
+            SystemMediaTransportControlsButton::ChannelUp => {
+                sink.add("channel_up".to_string());
+            }
+            SystemMediaTransportControlsButton::ChannelDown => {
+                sink.add("channel_down".to_string());
+            }
+            _ => {}
+        }
+        Ok(())
+    });
+
+    let media_player = MEDIA_PLAYER.lock().unwrap();
+
+    let smtc = media_player.SystemMediaTransportControls()?;
+
+    smtc.ButtonPressed(&handler)?;
+
+    anyhow::Result::Ok(())
+}
+
+pub fn position_change_request_event(sink: StreamSink<i64>) -> anyhow::Result<()> {
+    let handler = TypedEventHandler::<
+        SystemMediaTransportControls,
+        PlaybackPositionChangeRequestedEventArgs,
+    >::new(move |_, args| {
+        let position_ms = args
+            .as_ref()
+            .unwrap()
+            .RequestedPlaybackPosition()
+            .unwrap()
+            .Duration;
+
+        sink.add(position_ms);
+        Ok(())
+    });
+
+    let media_player = MEDIA_PLAYER.lock().unwrap();
+    let smtc = media_player.SystemMediaTransportControls()?;
+
+    smtc.PlaybackPositionChangeRequested(&handler)?;
+
+    anyhow::Result::Ok(())
+}
+
+pub fn shuffle_request_event(sink: StreamSink<bool>) -> anyhow::Result<()> {
+    let handler = TypedEventHandler::<
+        SystemMediaTransportControls,
+        ShuffleEnabledChangeRequestedEventArgs,
+    >::new(move |_, args| {
+        let shuffle = args.as_ref().unwrap().RequestedShuffleEnabled().unwrap();
+
+        sink.add(shuffle);
+        Ok(())
+    });
+
+    let media_player = MEDIA_PLAYER.lock().unwrap();
+    let smtc = media_player.SystemMediaTransportControls()?;
+
+    smtc.ShuffleEnabledChangeRequested(&handler)?;
+
+    anyhow::Result::Ok(())
+}
+
+pub fn repeat_mode_request_event(sink: StreamSink<String>) -> anyhow::Result<()> {
+    let handler = TypedEventHandler::<
+        SystemMediaTransportControls,
+        AutoRepeatModeChangeRequestedEventArgs,
+    >::new(move |_, args| {
+        let repeat_mode = args.as_ref().unwrap().RequestedAutoRepeatMode().unwrap();
+
+        match repeat_mode {
+            MediaPlaybackAutoRepeatMode::None => {
+                sink.add("none".to_string());
+            }
+            MediaPlaybackAutoRepeatMode::Track => {
+                sink.add("track".to_string());
+            }
+            MediaPlaybackAutoRepeatMode::List => {
+                sink.add("list".to_string());
+            }
+            _ => {
+                sink.add("none".to_string());
+            }
+        }
+
+        Ok(())
+    });
+
+    let media_player = MEDIA_PLAYER.lock().unwrap();
+    let smtc = media_player.SystemMediaTransportControls()?;
+
+    smtc.AutoRepeatModeChangeRequested(&handler)?;
+
+    anyhow::Result::Ok(())
 }
