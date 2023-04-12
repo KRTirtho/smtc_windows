@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 0
       - name: Setup git
         run: |
-          git config user.name "K R Tirtho"
+          git config user.name "KR Tirtho"
           git config user.email "krtirtho@gmail.com"
       - uses: subosito/flutter-action@v2
       - uses: bluefireteam/melos-action@v2
