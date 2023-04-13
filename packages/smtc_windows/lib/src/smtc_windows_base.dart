@@ -71,11 +71,10 @@ class SMTCWindows {
         .map(RepeatMode.fromString)
         .asBroadcastStream();
 
+    updateConfig(_config);
+
     if (status != null) {
       setPlaybackStatus(status);
-    }
-    if (config != null) {
-      updateConfig(config);
     }
     if (timeline != null) {
       updateTimeline(timeline);
