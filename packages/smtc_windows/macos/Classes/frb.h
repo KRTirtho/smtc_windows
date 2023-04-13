@@ -11,9 +11,9 @@ typedef bool (*DartPostCObjectFnType)(DartPort port_id, void *message);
 
 typedef struct DartCObject *WireSyncReturn;
 
-typedef struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer {
+typedef struct wire_SmtcInternal {
   const void *ptr;
-} wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer;
+} wire_SmtcInternal;
 
 typedef struct wire_SMTCConfig {
   bool play_enabled;
@@ -60,71 +60,38 @@ intptr_t init_frb_dart_api_dl(void *obj);
 WireSyncReturn wire_smtc_new(void);
 
 void wire_smtc_update_config(int64_t port_,
-                             struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+                             struct wire_SmtcInternal internal,
                              struct wire_SMTCConfig *config);
 
 void wire_smtc_update_metadata(int64_t port_,
-                               struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+                               struct wire_SmtcInternal internal,
                                struct wire_MusicMetadata *metadata);
 
 void wire_smtc_update_timeline(int64_t port_,
-                               struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+                               struct wire_SmtcInternal internal,
                                struct wire_PlaybackTimeline *timeline);
 
 void wire_smtc_update_playback_status(int64_t port_,
-                                      struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+                                      struct wire_SmtcInternal internal,
                                       int32_t status);
 
-void wire_smtc_update_shuffle(int64_t port_,
-                              struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
-                              bool shuffle);
+void wire_smtc_update_shuffle(int64_t port_, struct wire_SmtcInternal internal, bool shuffle);
 
 void wire_smtc_update_repeat_mode(int64_t port_,
-                                  struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player,
+                                  struct wire_SmtcInternal internal,
                                   struct wire_uint_8_list *repeat_mode);
 
-void wire_smtc_disable_smtc(int64_t port_,
-                            struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player);
+void wire_smtc_disable_smtc(int64_t port_, struct wire_SmtcInternal internal);
 
-void wire_smtc_button_press_event(int64_t port_,
-                                  struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player);
+void wire_smtc_button_press_event(int64_t port_, struct wire_SmtcInternal internal);
 
-void wire_smtc_position_change_request_event(int64_t port_,
-                                             struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player);
+void wire_smtc_position_change_request_event(int64_t port_, struct wire_SmtcInternal internal);
 
-void wire_smtc_shuffle_request_event(int64_t port_,
-                                     struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player);
+void wire_smtc_shuffle_request_event(int64_t port_, struct wire_SmtcInternal internal);
 
-void wire_smtc_repeat_mode_request_event(int64_t port_,
-                                         struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer media_player);
+void wire_smtc_repeat_mode_request_event(int64_t port_, struct wire_SmtcInternal internal);
 
-void wire_initialize_media_player(int64_t port_,
-                                  struct wire_SMTCConfig *config,
-                                  struct wire_PlaybackTimeline *timeline);
-
-void wire_update_config(int64_t port_, struct wire_SMTCConfig *config);
-
-void wire_update_metadata(int64_t port_, struct wire_MusicMetadata *metadata);
-
-void wire_update_timeline(int64_t port_, struct wire_PlaybackTimeline *timeline);
-
-void wire_update_playback_status(int64_t port_, int32_t status);
-
-void wire_update_shuffle(int64_t port_, bool shuffle);
-
-void wire_update_repeat_mode(int64_t port_, struct wire_uint_8_list *repeat_mode);
-
-void wire_disable_smtc(int64_t port_);
-
-void wire_button_press_event(int64_t port_);
-
-void wire_position_change_request_event(int64_t port_);
-
-void wire_shuffle_request_event(int64_t port_);
-
-void wire_repeat_mode_request_event(int64_t port_);
-
-struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer new_StdSyncMutexWindowsMediaPlaybackMediaPlayer(void);
+struct wire_SmtcInternal new_SmtcInternal(void);
 
 int64_t *new_box_autoadd_i64_0(int64_t value);
 
@@ -136,9 +103,9 @@ struct wire_SMTCConfig *new_box_autoadd_smtc_config_0(void);
 
 struct wire_uint_8_list *new_uint_8_list_0(int32_t len);
 
-void drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(const void *ptr);
+void drop_opaque_SmtcInternal(const void *ptr);
 
-const void *share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(const void *ptr);
+const void *share_opaque_SmtcInternal(const void *ptr);
 
 void free_WireSyncReturn(WireSyncReturn ptr);
 
@@ -156,26 +123,14 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) wire_smtc_position_change_request_event);
     dummy_var ^= ((int64_t) (void*) wire_smtc_shuffle_request_event);
     dummy_var ^= ((int64_t) (void*) wire_smtc_repeat_mode_request_event);
-    dummy_var ^= ((int64_t) (void*) wire_initialize_media_player);
-    dummy_var ^= ((int64_t) (void*) wire_update_config);
-    dummy_var ^= ((int64_t) (void*) wire_update_metadata);
-    dummy_var ^= ((int64_t) (void*) wire_update_timeline);
-    dummy_var ^= ((int64_t) (void*) wire_update_playback_status);
-    dummy_var ^= ((int64_t) (void*) wire_update_shuffle);
-    dummy_var ^= ((int64_t) (void*) wire_update_repeat_mode);
-    dummy_var ^= ((int64_t) (void*) wire_disable_smtc);
-    dummy_var ^= ((int64_t) (void*) wire_button_press_event);
-    dummy_var ^= ((int64_t) (void*) wire_position_change_request_event);
-    dummy_var ^= ((int64_t) (void*) wire_shuffle_request_event);
-    dummy_var ^= ((int64_t) (void*) wire_repeat_mode_request_event);
-    dummy_var ^= ((int64_t) (void*) new_StdSyncMutexWindowsMediaPlaybackMediaPlayer);
+    dummy_var ^= ((int64_t) (void*) new_SmtcInternal);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_i64_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_music_metadata_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_playback_timeline_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_smtc_config_0);
     dummy_var ^= ((int64_t) (void*) new_uint_8_list_0);
-    dummy_var ^= ((int64_t) (void*) drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer);
-    dummy_var ^= ((int64_t) (void*) share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer);
+    dummy_var ^= ((int64_t) (void*) drop_opaque_SmtcInternal);
+    dummy_var ^= ((int64_t) (void*) share_opaque_SmtcInternal);
     dummy_var ^= ((int64_t) (void*) free_WireSyncReturn);
     dummy_var ^= ((int64_t) (void*) store_dart_post_cobject);
     dummy_var ^= ((int64_t) (void*) get_dart_object);

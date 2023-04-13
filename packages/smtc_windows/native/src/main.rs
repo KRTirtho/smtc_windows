@@ -1,18 +1,16 @@
 use std::{thread, time::Duration};
 
 pub mod api;
-pub mod config;
-pub mod metadata;
-pub mod timeline;
+pub mod internal;
 
 use crate::{
-    api::{initialize_media_player, update_metadata},
-    config::SMTCConfig,
-    metadata::MusicMetadata,
-    timeline::PlaybackTimeline,
+    api::{smtc_new, smtc_update_config, smtc_update_metadata, smtc_update_timeline, SMTCInternal},
+    internal::config::SMTCConfig,
+    internal::metadata::MusicMetadata,
+    internal::timeline::PlaybackTimeline,
 };
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let smtc_config = SMTCConfig::default();
     let timeline = PlaybackTimeline {
         start_time_ms: 0,
@@ -32,9 +30,36 @@ fn main() {
 
     println!("Waiting 10 seconds...");
 
-    initialize_media_player(smtc_config.clone(), timeline.clone()).unwrap();
+    let smtc_internal = smtc_new()?.0;
 
-    update_metadata(music_metadata.clone()).unwrap();
+    smtc_update_config(smtc_internal.clone(), smtc_config)?;
+    smtc_update_metadata(smtc_internal.clone(), music_metadata)?;
+    smtc_update_timeline(smtc_internal.clone(), timeline)?;
 
     thread::sleep(Duration::from_secs(10));
+
+    drop(smtc_internal);
+
+    println!("Now with the new API");
+
+    let smtc_internal = SMTCInternal::new()?;
+
+    let music_metadata=  MusicMetadata{
+      album: "Younger Now".to_string(),
+      album_artist: "Miley Cyrus".to_string(),
+      artist: "Miley Cyrus".to_string(),
+      title: "Malibu".to_string(),
+      track_number: 1,
+      thumbnail: Some("https://upload.wikimedia.org/wikipedia/en/thumb/7/72/Miley_Cyrus_-_Younger_Now_%28Official_Album_Cover%29.png/220px-Miley_Cyrus_-_Younger_Now_%28Official_Album_Cover%29.png".to_string()),
+    };
+
+    smtc_internal.update_config(smtc_config)?;
+    smtc_internal.update_metadata(music_metadata)?;
+    smtc_internal.update_timeline(timeline)?;
+
+    println!("Waiting 10 seconds...");
+
+    thread::sleep(Duration::from_secs(10));
+
+    Ok(())
 }

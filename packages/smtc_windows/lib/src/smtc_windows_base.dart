@@ -7,222 +7,259 @@ import 'package:smtc_windows/src/ffi.dart';
 import 'package:smtc_windows/src/extensions.dart';
 
 final SmtcWindows api = createLib();
-SMTCWindows? _instance;
 
 class SMTCWindows {
-  SMTCWindows._({
-    required SMTCConfig config,
-    required PlaybackTimeline timeline,
-  })  : _config = config,
-        _timeline = timeline,
-        _status = PlaybackStatus.Playing,
-        _metadata = const MusicMetadata(
-          title: '',
-          album: '',
-          albumArtist: '',
-          artist: '',
-          thumbnail: '',
-          trackNumber: 0,
-        );
+  //! Unsafe shared pointer to the underlying Rust struct.
+  late final SmtcInternal _internal;
 
   SMTCConfig _config;
   PlaybackTimeline _timeline;
   MusicMetadata _metadata;
-  PlaybackStatus _status;
+  PlaybackStatus? _status;
 
-  Stream<PressedButton>? _buttonPressedStream;
-  Stream<bool>? _shuffleChangeStream;
-  Stream<RepeatMode>? _repeatModeChangeStream;
+  late final Stream<PressedButton> _buttonPressedStream;
+  late final Stream<bool> _shuffleChangeStream;
+  late final Stream<RepeatMode> _repeatModeChangeStream;
 
-  bool _shuffleEnabled = false;
-  RepeatMode _repeatMode = RepeatMode.none;
+  late bool _shuffleEnabled;
+  late RepeatMode _repeatMode;
 
-  factory SMTCWindows() {
-    if (_instance == null) {
-      throw StateError('SMTCWindows has not been initialized');
+  SMTCWindows({
+    SMTCConfig? config,
+    PlaybackTimeline? timeline,
+    MusicMetadata? metadata,
+    PlaybackStatus? status,
+    bool? shuffleEnabled,
+    RepeatMode? repeatMode,
+  })  : _internal = api.smtcNew(),
+        _status = status,
+        _config = config ??
+            const SMTCConfig(
+              playEnabled: true,
+              pauseEnabled: true,
+              nextEnabled: true,
+              prevEnabled: true,
+              stopEnabled: false,
+              fastForwardEnabled: false,
+              rewindEnabled: false,
+            ),
+        _timeline = timeline ??
+            const PlaybackTimeline(
+              positionMs: 0,
+              startTimeMs: 0,
+              endTimeMs: 0,
+            ),
+        _metadata = metadata ??
+            const MusicMetadata(
+              title: '',
+              album: '',
+              albumArtist: '',
+              artist: '',
+              thumbnail: '',
+              trackNumber: 0,
+            ),
+        _shuffleEnabled = shuffleEnabled ?? false,
+        _repeatMode = repeatMode ?? RepeatMode.none {
+    _buttonPressedStream = api
+        .smtcButtonPressEvent(internal: _internal)
+        .map((event) => PressedButton.fromString(event))
+        .asBroadcastStream();
+    _shuffleChangeStream =
+        api.smtcShuffleRequestEvent(internal: _internal).asBroadcastStream();
+    _repeatModeChangeStream = api
+        .smtcRepeatModeRequestEvent(internal: _internal)
+        .map(RepeatMode.fromString)
+        .asBroadcastStream();
+
+    if (status != null) {
+      setPlaybackStatus(status);
     }
-
-    return _instance!;
+    if (config != null) {
+      updateConfig(config);
+    }
+    if (timeline != null) {
+      updateTimeline(timeline);
+    }
+    if (metadata != null) {
+      updateMetadata(metadata);
+    }
+    if (shuffleEnabled != null) {
+      setShuffleEnabled(shuffleEnabled);
+    }
+    if (repeatMode != null) {
+      setRepeatMode(repeatMode);
+    }
   }
 
-  static SMTCWindows get instance => SMTCWindows();
+  SMTCConfig get config => _config;
+  PlaybackTimeline get timeline => _timeline;
+  MusicMetadata get metadata => _metadata;
+  PlaybackStatus? get status => _status;
+  Stream<PressedButton> get buttonPressStream => _buttonPressedStream;
+  Stream<bool> get shuffleChangeStream => _shuffleChangeStream;
+  Stream<RepeatMode> get repeatModeChangeStream => _repeatModeChangeStream;
 
-  static SMTCConfig get config => instance._config;
-  static PlaybackTimeline get timeline => instance._timeline;
-  static MusicMetadata get metadata => instance._metadata;
-  static PlaybackStatus get status => instance._status;
-  static Stream<PressedButton> get buttonPressStream =>
-      instance._buttonPressedStream!;
-  static Stream<bool> get shuffleChangeStream => instance._shuffleChangeStream!;
-  static Stream<RepeatMode> get repeatModeChangeStream =>
-      instance._repeatModeChangeStream!;
+  bool get isPlayEnabled => config.playEnabled;
+  bool get isPauseEnabled => config.pauseEnabled;
+  bool get isStopEnabled => config.stopEnabled;
+  bool get isNextEnabled => config.nextEnabled;
+  bool get isPrevEnabled => config.prevEnabled;
+  bool get isFastForwardEnabled => config.fastForwardEnabled;
+  bool get isRewindEnabled => config.rewindEnabled;
 
-  static bool get isPlayEnabled => config.playEnabled;
-  static bool get isPauseEnabled => config.pauseEnabled;
-  static bool get isStopEnabled => config.stopEnabled;
-  static bool get isNextEnabled => config.nextEnabled;
-  static bool get isPrevEnabled => config.prevEnabled;
-  static bool get isFastForwardEnabled => config.fastForwardEnabled;
-  static bool get isRewindEnabled => config.rewindEnabled;
+  bool get isShuffleEnabled => _shuffleEnabled;
+  RepeatMode get repeatMode => _repeatMode;
 
-  static bool get isShuffleEnabled => instance._shuffleEnabled;
-  static RepeatMode get repeatMode => instance._repeatMode;
-
-  static Duration get startTime => Duration(milliseconds: timeline.startTimeMs);
-  static Duration get endTime => Duration(milliseconds: timeline.endTimeMs);
-  static Duration get position => Duration(milliseconds: timeline.positionMs);
-  static Duration? get minSeekTime => timeline.minSeekTimeMs == null
+  Duration? get startTime => Duration(milliseconds: timeline.startTimeMs);
+  Duration? get endTime => Duration(milliseconds: timeline.endTimeMs);
+  Duration? get position => Duration(milliseconds: timeline.positionMs);
+  Duration? get minSeekTime => timeline.minSeekTimeMs == null
       ? null
       : Duration(milliseconds: timeline.minSeekTimeMs!);
-  static Duration? get maxSeekTime => timeline.maxSeekTimeMs == null
+  Duration? get maxSeekTime => timeline.maxSeekTimeMs == null
       ? null
       : Duration(milliseconds: timeline.maxSeekTimeMs!);
 
-  static Future<void> initialize({
-    required PlaybackTimeline timeline,
-    SMTCConfig config = const SMTCConfig(
-      playEnabled: true,
-      pauseEnabled: true,
-      nextEnabled: true,
-      prevEnabled: true,
-      stopEnabled: false,
-      fastForwardEnabled: false,
-      rewindEnabled: false,
-    ),
-  }) async {
-    _instance ??= SMTCWindows._(config: config, timeline: timeline);
-    await api.initializeMediaPlayer(config: config, timeline: timeline);
-    instance._buttonPressedStream ??= api
-        .buttonPressEvent()
-        .map((event) => PressedButton.fromString(event))
-        .asBroadcastStream();
-    instance._shuffleChangeStream ??=
-        api.shuffleRequestEvent().asBroadcastStream();
-    instance._repeatModeChangeStream ??= api
-        .repeatModeRequestEvent()
-        .map(RepeatMode.fromString)
-        .asBroadcastStream();
+  Future<void> updateConfig(SMTCConfig config) {
+    _config = config;
+    return api.smtcUpdateConfig(
+      internal: _internal,
+      config: config,
+    );
   }
 
-  static Future<void> updateConfig(SMTCConfig config) {
-    instance._config = config;
-    return api.updateConfig(config: config);
+  Future<void> updateTimeline(PlaybackTimeline timeline) {
+    _timeline = timeline;
+    return api.smtcUpdateTimeline(
+      internal: _internal,
+      timeline: timeline,
+    );
   }
 
-  static Future<void> updateTimeline(PlaybackTimeline timeline) {
-    instance._timeline = timeline;
-    return api.updateTimeline(timeline: timeline);
+  Future<void> updateMetadata(MusicMetadata metadata) {
+    _metadata = metadata;
+    return api.smtcUpdateMetadata(
+      internal: _internal,
+      metadata: metadata,
+    );
   }
 
-  static Future<void> updateMetadata(MusicMetadata metadata) {
-    instance._metadata = metadata;
-    return api.updateMetadata(metadata: metadata);
+  Future<void> dispose() async {
+    await api.smtcUpdatePlaybackStatus(
+      internal: _internal,
+      status: PlaybackStatus.Closed,
+    );
+    await api.smtcDisableSmtc(internal: _internal);
+    _internal.dispose();
   }
 
-  static Future<void> disable() async {
-    await api.updatePlaybackStatus(status: PlaybackStatus.Closed);
-    await api.disableSmtc();
-    _instance = null;
+  Future<void> setPlaybackStatus(PlaybackStatus status) async {
+    _status = status;
+    return api.smtcUpdatePlaybackStatus(
+      internal: _internal,
+      status: status,
+    );
   }
 
-  static Future<void> setPlaybackStatus(PlaybackStatus status) {
-    instance._status = status;
-    return api.updatePlaybackStatus(status: status);
-  }
-
-  static Future<void> setIsPlayEnabled(bool enabled) {
+  Future<void> setIsPlayEnabled(bool enabled) {
     return updateConfig(config.copyWith(playEnabled: enabled));
   }
 
-  static Future<void> setIsPauseEnabled(bool enabled) {
+  Future<void> setIsPauseEnabled(bool enabled) {
     return updateConfig(config.copyWith(pauseEnabled: enabled));
   }
 
-  static Future<void> setIsStopEnabled(bool enabled) {
+  Future<void> setIsStopEnabled(bool enabled) {
     return updateConfig(config.copyWith(stopEnabled: enabled));
   }
 
-  static Future<void> setIsNextEnabled(bool enabled) {
+  Future<void> setIsNextEnabled(bool enabled) {
     return updateConfig(config.copyWith(nextEnabled: enabled));
   }
 
-  static Future<void> setIsPrevEnabled(bool enabled) {
+  Future<void> setIsPrevEnabled(bool enabled) {
     return updateConfig(config.copyWith(prevEnabled: enabled));
   }
 
-  static Future<void> setIsFastForwardEnabled(bool enabled) {
+  Future<void> setIsFastForwardEnabled(bool enabled) {
     return updateConfig(config.copyWith(fastForwardEnabled: enabled));
   }
 
-  static Future<void> setIsRewindEnabled(bool enabled) {
+  Future<void> setIsRewindEnabled(bool enabled) {
     return updateConfig(config.copyWith(rewindEnabled: enabled));
   }
 
-  static Future<void> setTimeline(PlaybackTimeline timeline) {
+  Future<void> setTimeline(PlaybackTimeline timeline) {
     return updateTimeline(timeline);
   }
 
-  static Future<void> setTitle(String title) {
+  Future<void> setTitle(String title) {
     return updateMetadata(metadata.copyWith(title: title));
   }
 
-  static Future<void> setArtist(String artist) {
+  Future<void> setArtist(String artist) {
     return updateMetadata(metadata.copyWith(artist: artist));
   }
 
-  static Future<void> setAlbum(String album) {
+  Future<void> setAlbum(String album) {
     return updateMetadata(metadata.copyWith(album: album));
   }
 
-  static Future<void> setAlbumArtist(String albumArtist) {
+  Future<void> setAlbumArtist(String albumArtist) {
     return updateMetadata(metadata.copyWith(albumArtist: albumArtist));
   }
 
-  static Future<void> setThumbnail(String thumbnail) {
+  Future<void> setThumbnail(String thumbnail) {
     return updateMetadata(metadata.copyWith(thumbnail: thumbnail));
   }
 
-  static Future<void> setTrackNumber(int trackNumber) {
+  Future<void> setTrackNumber(int trackNumber) {
     return updateMetadata(metadata.copyWith(trackNumber: trackNumber));
   }
 
-  static Future<void> setPosition(Duration position) {
+  Future<void> setPosition(Duration position) {
     return updateTimeline(
       timeline.copyWith(positionMs: position.inMilliseconds),
     );
   }
 
-  static Future<void> setStartTime(Duration startTime) {
+  Future<void> setStartTime(Duration startTime) {
     return updateTimeline(
       timeline.copyWith(startTimeMs: startTime.inMilliseconds),
     );
   }
 
-  static Future<void> setEndTime(Duration endTime) {
+  Future<void> setEndTime(Duration endTime) {
     return updateTimeline(
       timeline.copyWith(endTimeMs: endTime.inMilliseconds),
     );
   }
 
-  static Future<void> setMaxSeekTime(Duration maxSeekTime) {
+  Future<void> setMaxSeekTime(Duration maxSeekTime) {
     return updateTimeline(
       timeline.copyWith(maxSeekTimeMs: maxSeekTime.inMilliseconds),
     );
   }
 
-  static Future<void> setMinSeekTime(Duration minSeekTime) {
+  Future<void> setMinSeekTime(Duration minSeekTime) {
     return updateTimeline(
       timeline.copyWith(minSeekTimeMs: minSeekTime.inMilliseconds),
     );
   }
 
-  static Future<void> setShuffleEnabled(bool enabled) {
-    instance._shuffleEnabled = enabled;
-    return api.updateShuffle(shuffle: enabled);
+  Future<void> setShuffleEnabled(bool enabled) {
+    _shuffleEnabled = enabled;
+    return api.smtcUpdateShuffle(
+      internal: _internal,
+      shuffle: enabled,
+    );
   }
 
-  static Future<void> setRepeatMode(RepeatMode repeatMode) {
-    instance._repeatMode = repeatMode;
-    return api.updateRepeatMode(repeatMode: repeatMode.asString);
+  Future<void> setRepeatMode(RepeatMode repeatMode) {
+    _repeatMode = repeatMode;
+    return api.smtcUpdateRepeatMode(
+      internal: _internal,
+      repeatMode: repeatMode.asString,
+    );
   }
 }

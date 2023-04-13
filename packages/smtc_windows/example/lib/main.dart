@@ -18,11 +18,20 @@ class _MyAppState extends State<MyApp> {
   late int sumResult;
   late Future<int> sumAsyncResult;
 
-  late ConventionalSMTC smtc;
+  late SMTCWindows smtc;
 
   @override
   void initState() {
-    smtc = ConventionalSMTC(
+    smtc = SMTCWindows(
+      metadata: const MusicMetadata(
+        title: 'Title',
+        album: 'Album',
+        albumArtist: 'Album Artist',
+        artist: 'Artist',
+        thumbnail:
+            'https://media.glamour.com/photos/5f4c44e20c71c58fc210d35f/master/w_2560%2Cc_limit/mgid_ao_image_mtv.jpg',
+        trackNumber: 1,
+      ),
       timeline: const PlaybackTimeline(
         startTimeMs: 0,
         endTimeMs: 1000,
@@ -33,35 +42,13 @@ class _MyAppState extends State<MyApp> {
     );
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        await smtc.updateTimeline(
-          const PlaybackTimeline(
-            startTimeMs: 0,
-            endTimeMs: 1000,
-            positionMs: 500,
-            minSeekTimeMs: 0,
-            maxSeekTimeMs: 1000,
-          ),
-        );
-
-        await smtc.updateMetadata(
-          const MusicMetadata(
-            title: 'Title',
-            album: 'Album',
-            albumArtist: 'Album Artist',
-            artist: 'Artist',
-            thumbnail:
-                'https://media.glamour.com/photos/5f4c44e20c71c58fc210d35f/master/w_2560%2Cc_limit/mgid_ao_image_mtv.jpg',
-            trackNumber: 1,
-          ),
-        );
-
         smtc.buttonPressStream.listen((event) {
           switch (event) {
             case PressedButton.play:
-              SMTCWindows.setPlaybackStatus(PlaybackStatus.Playing);
+              smtc.setPlaybackStatus(PlaybackStatus.Playing);
               break;
             case PressedButton.pause:
-              SMTCWindows.setPlaybackStatus(PlaybackStatus.Paused);
+              smtc.setPlaybackStatus(PlaybackStatus.Paused);
               break;
             case PressedButton.next:
               print('Next');
@@ -93,7 +80,22 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Native Packages'),
         ),
-        body: const SizedBox(),
+        body: ElevatedButton(
+          child: const Text("Click"),
+          onPressed: () {
+            smtc.updateMetadata(
+              const MusicMetadata(
+                title: 'Title',
+                album: 'Album',
+                albumArtist: 'Album Artist',
+                artist: 'Artist',
+                thumbnail:
+                    'https://media.glamour.com/photos/5f4c44e20c71c58fc210d35f/master/w_2560%2Cc_limit/mgid_ao_image_mtv.jpg',
+                trackNumber: 1,
+              ),
+            );
+          },
+        ),
       ),
     );
   }

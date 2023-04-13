@@ -19,7 +19,7 @@ class SmtcWindowsPlatform extends FlutterRustBridgeBase<SmtcWindowsWire> with Fl
 // Section: api2wire
 
   @protected
-  Object api2wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer(StdSyncMutexWindowsMediaPlaybackMediaPlayer raw) {
+  Object api2wire_SmtcInternal(SmtcInternal raw) {
     return raw.shareOrMove();
   }
 
@@ -105,8 +105,8 @@ class SmtcWindowsPlatform extends FlutterRustBridgeBase<SmtcWindowsWire> with Fl
   }
 // Section: finalizer
 
-  late final Finalizer<PlatformPointer> _StdSyncMutexWindowsMediaPlaybackMediaPlayerFinalizer = Finalizer<PlatformPointer>(inner.drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer);
-  Finalizer<PlatformPointer> get StdSyncMutexWindowsMediaPlaybackMediaPlayerFinalizer => _StdSyncMutexWindowsMediaPlaybackMediaPlayerFinalizer;
+  late final Finalizer<PlatformPointer> _SmtcInternalFinalizer = Finalizer<PlatformPointer>(inner.drop_opaque_SmtcInternal);
+  Finalizer<PlatformPointer> get SmtcInternalFinalizer => _SmtcInternalFinalizer;
 }
 
 // Section: WASM wire module
@@ -121,55 +121,31 @@ class SmtcWindowsWasmModule implements WasmModule {
   external SmtcWindowsWasmModule bind(dynamic thisArg, String moduleName);
   external dynamic /* Object */ wire_smtc_new();
 
-  external dynamic /* void */ wire_smtc_update_config(NativePortType port_, Object media_player, List<dynamic> config);
+  external dynamic /* void */ wire_smtc_update_config(NativePortType port_, Object internal, List<dynamic> config);
 
-  external dynamic /* void */ wire_smtc_update_metadata(NativePortType port_, Object media_player, List<dynamic> metadata);
+  external dynamic /* void */ wire_smtc_update_metadata(NativePortType port_, Object internal, List<dynamic> metadata);
 
-  external dynamic /* void */ wire_smtc_update_timeline(NativePortType port_, Object media_player, List<dynamic> timeline);
+  external dynamic /* void */ wire_smtc_update_timeline(NativePortType port_, Object internal, List<dynamic> timeline);
 
-  external dynamic /* void */ wire_smtc_update_playback_status(NativePortType port_, Object media_player, int status);
+  external dynamic /* void */ wire_smtc_update_playback_status(NativePortType port_, Object internal, int status);
 
-  external dynamic /* void */ wire_smtc_update_shuffle(NativePortType port_, Object media_player, bool shuffle);
+  external dynamic /* void */ wire_smtc_update_shuffle(NativePortType port_, Object internal, bool shuffle);
 
-  external dynamic /* void */ wire_smtc_update_repeat_mode(NativePortType port_, Object media_player, String repeat_mode);
+  external dynamic /* void */ wire_smtc_update_repeat_mode(NativePortType port_, Object internal, String repeat_mode);
 
-  external dynamic /* void */ wire_smtc_disable_smtc(NativePortType port_, Object media_player);
+  external dynamic /* void */ wire_smtc_disable_smtc(NativePortType port_, Object internal);
 
-  external dynamic /* void */ wire_smtc_button_press_event(NativePortType port_, Object media_player);
+  external dynamic /* void */ wire_smtc_button_press_event(NativePortType port_, Object internal);
 
-  external dynamic /* void */ wire_smtc_position_change_request_event(NativePortType port_, Object media_player);
+  external dynamic /* void */ wire_smtc_position_change_request_event(NativePortType port_, Object internal);
 
-  external dynamic /* void */ wire_smtc_shuffle_request_event(NativePortType port_, Object media_player);
+  external dynamic /* void */ wire_smtc_shuffle_request_event(NativePortType port_, Object internal);
 
-  external dynamic /* void */ wire_smtc_repeat_mode_request_event(NativePortType port_, Object media_player);
+  external dynamic /* void */ wire_smtc_repeat_mode_request_event(NativePortType port_, Object internal);
 
-  external dynamic /* void */ wire_initialize_media_player(NativePortType port_, List<dynamic> config, List<dynamic> timeline);
+  external dynamic /*  */ drop_opaque_SmtcInternal(ptr);
 
-  external dynamic /* void */ wire_update_config(NativePortType port_, List<dynamic> config);
-
-  external dynamic /* void */ wire_update_metadata(NativePortType port_, List<dynamic> metadata);
-
-  external dynamic /* void */ wire_update_timeline(NativePortType port_, List<dynamic> timeline);
-
-  external dynamic /* void */ wire_update_playback_status(NativePortType port_, int status);
-
-  external dynamic /* void */ wire_update_shuffle(NativePortType port_, bool shuffle);
-
-  external dynamic /* void */ wire_update_repeat_mode(NativePortType port_, String repeat_mode);
-
-  external dynamic /* void */ wire_disable_smtc(NativePortType port_);
-
-  external dynamic /* void */ wire_button_press_event(NativePortType port_);
-
-  external dynamic /* void */ wire_position_change_request_event(NativePortType port_);
-
-  external dynamic /* void */ wire_shuffle_request_event(NativePortType port_);
-
-  external dynamic /* void */ wire_repeat_mode_request_event(NativePortType port_);
-
-  external dynamic /*  */ drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr);
-
-  external int /* *const c_void */ share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr);
+  external int /* *const c_void */ share_opaque_SmtcInternal(ptr);
 }
 
 // Section: WASM wire connector
@@ -179,53 +155,29 @@ class SmtcWindowsWire extends FlutterRustBridgeWasmWireBase<SmtcWindowsWasmModul
 
   dynamic /* Object */ wire_smtc_new() => wasmModule.wire_smtc_new();
 
-  void wire_smtc_update_config(NativePortType port_, Object media_player, List<dynamic> config) => wasmModule.wire_smtc_update_config(port_, media_player, config);
+  void wire_smtc_update_config(NativePortType port_, Object internal, List<dynamic> config) => wasmModule.wire_smtc_update_config(port_, internal, config);
 
-  void wire_smtc_update_metadata(NativePortType port_, Object media_player, List<dynamic> metadata) => wasmModule.wire_smtc_update_metadata(port_, media_player, metadata);
+  void wire_smtc_update_metadata(NativePortType port_, Object internal, List<dynamic> metadata) => wasmModule.wire_smtc_update_metadata(port_, internal, metadata);
 
-  void wire_smtc_update_timeline(NativePortType port_, Object media_player, List<dynamic> timeline) => wasmModule.wire_smtc_update_timeline(port_, media_player, timeline);
+  void wire_smtc_update_timeline(NativePortType port_, Object internal, List<dynamic> timeline) => wasmModule.wire_smtc_update_timeline(port_, internal, timeline);
 
-  void wire_smtc_update_playback_status(NativePortType port_, Object media_player, int status) => wasmModule.wire_smtc_update_playback_status(port_, media_player, status);
+  void wire_smtc_update_playback_status(NativePortType port_, Object internal, int status) => wasmModule.wire_smtc_update_playback_status(port_, internal, status);
 
-  void wire_smtc_update_shuffle(NativePortType port_, Object media_player, bool shuffle) => wasmModule.wire_smtc_update_shuffle(port_, media_player, shuffle);
+  void wire_smtc_update_shuffle(NativePortType port_, Object internal, bool shuffle) => wasmModule.wire_smtc_update_shuffle(port_, internal, shuffle);
 
-  void wire_smtc_update_repeat_mode(NativePortType port_, Object media_player, String repeat_mode) => wasmModule.wire_smtc_update_repeat_mode(port_, media_player, repeat_mode);
+  void wire_smtc_update_repeat_mode(NativePortType port_, Object internal, String repeat_mode) => wasmModule.wire_smtc_update_repeat_mode(port_, internal, repeat_mode);
 
-  void wire_smtc_disable_smtc(NativePortType port_, Object media_player) => wasmModule.wire_smtc_disable_smtc(port_, media_player);
+  void wire_smtc_disable_smtc(NativePortType port_, Object internal) => wasmModule.wire_smtc_disable_smtc(port_, internal);
 
-  void wire_smtc_button_press_event(NativePortType port_, Object media_player) => wasmModule.wire_smtc_button_press_event(port_, media_player);
+  void wire_smtc_button_press_event(NativePortType port_, Object internal) => wasmModule.wire_smtc_button_press_event(port_, internal);
 
-  void wire_smtc_position_change_request_event(NativePortType port_, Object media_player) => wasmModule.wire_smtc_position_change_request_event(port_, media_player);
+  void wire_smtc_position_change_request_event(NativePortType port_, Object internal) => wasmModule.wire_smtc_position_change_request_event(port_, internal);
 
-  void wire_smtc_shuffle_request_event(NativePortType port_, Object media_player) => wasmModule.wire_smtc_shuffle_request_event(port_, media_player);
+  void wire_smtc_shuffle_request_event(NativePortType port_, Object internal) => wasmModule.wire_smtc_shuffle_request_event(port_, internal);
 
-  void wire_smtc_repeat_mode_request_event(NativePortType port_, Object media_player) => wasmModule.wire_smtc_repeat_mode_request_event(port_, media_player);
+  void wire_smtc_repeat_mode_request_event(NativePortType port_, Object internal) => wasmModule.wire_smtc_repeat_mode_request_event(port_, internal);
 
-  void wire_initialize_media_player(NativePortType port_, List<dynamic> config, List<dynamic> timeline) => wasmModule.wire_initialize_media_player(port_, config, timeline);
+  dynamic /*  */ drop_opaque_SmtcInternal(ptr) => wasmModule.drop_opaque_SmtcInternal(ptr);
 
-  void wire_update_config(NativePortType port_, List<dynamic> config) => wasmModule.wire_update_config(port_, config);
-
-  void wire_update_metadata(NativePortType port_, List<dynamic> metadata) => wasmModule.wire_update_metadata(port_, metadata);
-
-  void wire_update_timeline(NativePortType port_, List<dynamic> timeline) => wasmModule.wire_update_timeline(port_, timeline);
-
-  void wire_update_playback_status(NativePortType port_, int status) => wasmModule.wire_update_playback_status(port_, status);
-
-  void wire_update_shuffle(NativePortType port_, bool shuffle) => wasmModule.wire_update_shuffle(port_, shuffle);
-
-  void wire_update_repeat_mode(NativePortType port_, String repeat_mode) => wasmModule.wire_update_repeat_mode(port_, repeat_mode);
-
-  void wire_disable_smtc(NativePortType port_) => wasmModule.wire_disable_smtc(port_);
-
-  void wire_button_press_event(NativePortType port_) => wasmModule.wire_button_press_event(port_);
-
-  void wire_position_change_request_event(NativePortType port_) => wasmModule.wire_position_change_request_event(port_);
-
-  void wire_shuffle_request_event(NativePortType port_) => wasmModule.wire_shuffle_request_event(port_);
-
-  void wire_repeat_mode_request_event(NativePortType port_) => wasmModule.wire_repeat_mode_request_event(port_);
-
-  dynamic /*  */ drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr) => wasmModule.drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr);
-
-  int /* *const c_void */ share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr) => wasmModule.share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr);
+  int /* *const c_void */ share_opaque_SmtcInternal(ptr) => wasmModule.share_opaque_SmtcInternal(ptr);
 }

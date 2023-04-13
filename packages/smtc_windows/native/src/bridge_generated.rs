@@ -19,9 +19,10 @@ use std::sync::Arc;
 
 // Section: imports
 
-use crate::config::SMTCConfig;
-use crate::metadata::MusicMetadata;
-use crate::timeline::PlaybackTimeline;
+use crate::internal::config::SMTCConfig;
+use crate::internal::metadata::MusicMetadata;
+use crate::internal::playback_status::PlaybackStatus;
+use crate::internal::timeline::PlaybackTimeline;
 
 // Section: wire functions
 
@@ -37,8 +38,7 @@ fn wire_smtc_new_impl() -> support::WireSyncReturn {
 }
 fn wire_smtc_update_config_impl(
     port_: MessagePort,
-    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
-        + UnwindSafe,
+    internal: impl Wire2Api<RustOpaque<SMTCInternal>> + UnwindSafe,
     config: impl Wire2Api<SMTCConfig> + UnwindSafe,
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
@@ -48,16 +48,15 @@ fn wire_smtc_update_config_impl(
             mode: FfiCallMode::Normal,
         },
         move || {
-            let api_media_player = media_player.wire2api();
+            let api_internal = internal.wire2api();
             let api_config = config.wire2api();
-            move |task_callback| smtc_update_config(api_media_player, api_config)
+            move |task_callback| smtc_update_config(api_internal, api_config)
         },
     )
 }
 fn wire_smtc_update_metadata_impl(
     port_: MessagePort,
-    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
-        + UnwindSafe,
+    internal: impl Wire2Api<RustOpaque<SMTCInternal>> + UnwindSafe,
     metadata: impl Wire2Api<MusicMetadata> + UnwindSafe,
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
@@ -67,16 +66,15 @@ fn wire_smtc_update_metadata_impl(
             mode: FfiCallMode::Normal,
         },
         move || {
-            let api_media_player = media_player.wire2api();
+            let api_internal = internal.wire2api();
             let api_metadata = metadata.wire2api();
-            move |task_callback| smtc_update_metadata(api_media_player, api_metadata)
+            move |task_callback| smtc_update_metadata(api_internal, api_metadata)
         },
     )
 }
 fn wire_smtc_update_timeline_impl(
     port_: MessagePort,
-    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
-        + UnwindSafe,
+    internal: impl Wire2Api<RustOpaque<SMTCInternal>> + UnwindSafe,
     timeline: impl Wire2Api<PlaybackTimeline> + UnwindSafe,
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
@@ -86,16 +84,15 @@ fn wire_smtc_update_timeline_impl(
             mode: FfiCallMode::Normal,
         },
         move || {
-            let api_media_player = media_player.wire2api();
+            let api_internal = internal.wire2api();
             let api_timeline = timeline.wire2api();
-            move |task_callback| smtc_update_timeline(api_media_player, api_timeline)
+            move |task_callback| smtc_update_timeline(api_internal, api_timeline)
         },
     )
 }
 fn wire_smtc_update_playback_status_impl(
     port_: MessagePort,
-    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
-        + UnwindSafe,
+    internal: impl Wire2Api<RustOpaque<SMTCInternal>> + UnwindSafe,
     status: impl Wire2Api<PlaybackStatus> + UnwindSafe,
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
@@ -105,16 +102,15 @@ fn wire_smtc_update_playback_status_impl(
             mode: FfiCallMode::Normal,
         },
         move || {
-            let api_media_player = media_player.wire2api();
+            let api_internal = internal.wire2api();
             let api_status = status.wire2api();
-            move |task_callback| smtc_update_playback_status(api_media_player, api_status)
+            move |task_callback| smtc_update_playback_status(api_internal, api_status)
         },
     )
 }
 fn wire_smtc_update_shuffle_impl(
     port_: MessagePort,
-    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
-        + UnwindSafe,
+    internal: impl Wire2Api<RustOpaque<SMTCInternal>> + UnwindSafe,
     shuffle: impl Wire2Api<bool> + UnwindSafe,
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
@@ -124,16 +120,15 @@ fn wire_smtc_update_shuffle_impl(
             mode: FfiCallMode::Normal,
         },
         move || {
-            let api_media_player = media_player.wire2api();
+            let api_internal = internal.wire2api();
             let api_shuffle = shuffle.wire2api();
-            move |task_callback| smtc_update_shuffle(api_media_player, api_shuffle)
+            move |task_callback| smtc_update_shuffle(api_internal, api_shuffle)
         },
     )
 }
 fn wire_smtc_update_repeat_mode_impl(
     port_: MessagePort,
-    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
-        + UnwindSafe,
+    internal: impl Wire2Api<RustOpaque<SMTCInternal>> + UnwindSafe,
     repeat_mode: impl Wire2Api<String> + UnwindSafe,
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
@@ -143,16 +138,15 @@ fn wire_smtc_update_repeat_mode_impl(
             mode: FfiCallMode::Normal,
         },
         move || {
-            let api_media_player = media_player.wire2api();
+            let api_internal = internal.wire2api();
             let api_repeat_mode = repeat_mode.wire2api();
-            move |task_callback| smtc_update_repeat_mode(api_media_player, api_repeat_mode)
+            move |task_callback| smtc_update_repeat_mode(api_internal, api_repeat_mode)
         },
     )
 }
 fn wire_smtc_disable_smtc_impl(
     port_: MessagePort,
-    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
-        + UnwindSafe,
+    internal: impl Wire2Api<RustOpaque<SMTCInternal>> + UnwindSafe,
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {
@@ -161,15 +155,14 @@ fn wire_smtc_disable_smtc_impl(
             mode: FfiCallMode::Normal,
         },
         move || {
-            let api_media_player = media_player.wire2api();
-            move |task_callback| smtc_disable_smtc(api_media_player)
+            let api_internal = internal.wire2api();
+            move |task_callback| smtc_disable_smtc(api_internal)
         },
     )
 }
 fn wire_smtc_button_press_event_impl(
     port_: MessagePort,
-    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
-        + UnwindSafe,
+    internal: impl Wire2Api<RustOpaque<SMTCInternal>> + UnwindSafe,
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {
@@ -178,17 +171,14 @@ fn wire_smtc_button_press_event_impl(
             mode: FfiCallMode::Stream,
         },
         move || {
-            let api_media_player = media_player.wire2api();
-            move |task_callback| {
-                smtc_button_press_event(api_media_player, task_callback.stream_sink())
-            }
+            let api_internal = internal.wire2api();
+            move |task_callback| smtc_button_press_event(api_internal, task_callback.stream_sink())
         },
     )
 }
 fn wire_smtc_position_change_request_event_impl(
     port_: MessagePort,
-    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
-        + UnwindSafe,
+    internal: impl Wire2Api<RustOpaque<SMTCInternal>> + UnwindSafe,
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {
@@ -197,17 +187,16 @@ fn wire_smtc_position_change_request_event_impl(
             mode: FfiCallMode::Stream,
         },
         move || {
-            let api_media_player = media_player.wire2api();
+            let api_internal = internal.wire2api();
             move |task_callback| {
-                smtc_position_change_request_event(api_media_player, task_callback.stream_sink())
+                smtc_position_change_request_event(api_internal, task_callback.stream_sink())
             }
         },
     )
 }
 fn wire_smtc_shuffle_request_event_impl(
     port_: MessagePort,
-    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
-        + UnwindSafe,
+    internal: impl Wire2Api<RustOpaque<SMTCInternal>> + UnwindSafe,
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {
@@ -216,17 +205,16 @@ fn wire_smtc_shuffle_request_event_impl(
             mode: FfiCallMode::Stream,
         },
         move || {
-            let api_media_player = media_player.wire2api();
+            let api_internal = internal.wire2api();
             move |task_callback| {
-                smtc_shuffle_request_event(api_media_player, task_callback.stream_sink())
+                smtc_shuffle_request_event(api_internal, task_callback.stream_sink())
             }
         },
     )
 }
 fn wire_smtc_repeat_mode_request_event_impl(
     port_: MessagePort,
-    media_player: impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
-        + UnwindSafe,
+    internal: impl Wire2Api<RustOpaque<SMTCInternal>> + UnwindSafe,
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap(
         WrapInfo {
@@ -235,169 +223,11 @@ fn wire_smtc_repeat_mode_request_event_impl(
             mode: FfiCallMode::Stream,
         },
         move || {
-            let api_media_player = media_player.wire2api();
+            let api_internal = internal.wire2api();
             move |task_callback| {
-                smtc_repeat_mode_request_event(api_media_player, task_callback.stream_sink())
+                smtc_repeat_mode_request_event(api_internal, task_callback.stream_sink())
             }
         },
-    )
-}
-fn wire_initialize_media_player_impl(
-    port_: MessagePort,
-    config: impl Wire2Api<SMTCConfig> + UnwindSafe,
-    timeline: impl Wire2Api<PlaybackTimeline> + UnwindSafe,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
-        WrapInfo {
-            debug_name: "initialize_media_player",
-            port: Some(port_),
-            mode: FfiCallMode::Normal,
-        },
-        move || {
-            let api_config = config.wire2api();
-            let api_timeline = timeline.wire2api();
-            move |task_callback| initialize_media_player(api_config, api_timeline)
-        },
-    )
-}
-fn wire_update_config_impl(port_: MessagePort, config: impl Wire2Api<SMTCConfig> + UnwindSafe) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
-        WrapInfo {
-            debug_name: "update_config",
-            port: Some(port_),
-            mode: FfiCallMode::Normal,
-        },
-        move || {
-            let api_config = config.wire2api();
-            move |task_callback| update_config(api_config)
-        },
-    )
-}
-fn wire_update_metadata_impl(
-    port_: MessagePort,
-    metadata: impl Wire2Api<MusicMetadata> + UnwindSafe,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
-        WrapInfo {
-            debug_name: "update_metadata",
-            port: Some(port_),
-            mode: FfiCallMode::Normal,
-        },
-        move || {
-            let api_metadata = metadata.wire2api();
-            move |task_callback| update_metadata(api_metadata)
-        },
-    )
-}
-fn wire_update_timeline_impl(
-    port_: MessagePort,
-    timeline: impl Wire2Api<PlaybackTimeline> + UnwindSafe,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
-        WrapInfo {
-            debug_name: "update_timeline",
-            port: Some(port_),
-            mode: FfiCallMode::Normal,
-        },
-        move || {
-            let api_timeline = timeline.wire2api();
-            move |task_callback| update_timeline(api_timeline)
-        },
-    )
-}
-fn wire_update_playback_status_impl(
-    port_: MessagePort,
-    status: impl Wire2Api<PlaybackStatus> + UnwindSafe,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
-        WrapInfo {
-            debug_name: "update_playback_status",
-            port: Some(port_),
-            mode: FfiCallMode::Normal,
-        },
-        move || {
-            let api_status = status.wire2api();
-            move |task_callback| update_playback_status(api_status)
-        },
-    )
-}
-fn wire_update_shuffle_impl(port_: MessagePort, shuffle: impl Wire2Api<bool> + UnwindSafe) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
-        WrapInfo {
-            debug_name: "update_shuffle",
-            port: Some(port_),
-            mode: FfiCallMode::Normal,
-        },
-        move || {
-            let api_shuffle = shuffle.wire2api();
-            move |task_callback| update_shuffle(api_shuffle)
-        },
-    )
-}
-fn wire_update_repeat_mode_impl(
-    port_: MessagePort,
-    repeat_mode: impl Wire2Api<String> + UnwindSafe,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
-        WrapInfo {
-            debug_name: "update_repeat_mode",
-            port: Some(port_),
-            mode: FfiCallMode::Normal,
-        },
-        move || {
-            let api_repeat_mode = repeat_mode.wire2api();
-            move |task_callback| update_repeat_mode(api_repeat_mode)
-        },
-    )
-}
-fn wire_disable_smtc_impl(port_: MessagePort) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
-        WrapInfo {
-            debug_name: "disable_smtc",
-            port: Some(port_),
-            mode: FfiCallMode::Normal,
-        },
-        move || move |task_callback| disable_smtc(),
-    )
-}
-fn wire_button_press_event_impl(port_: MessagePort) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
-        WrapInfo {
-            debug_name: "button_press_event",
-            port: Some(port_),
-            mode: FfiCallMode::Stream,
-        },
-        move || move |task_callback| button_press_event(task_callback.stream_sink()),
-    )
-}
-fn wire_position_change_request_event_impl(port_: MessagePort) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
-        WrapInfo {
-            debug_name: "position_change_request_event",
-            port: Some(port_),
-            mode: FfiCallMode::Stream,
-        },
-        move || move |task_callback| position_change_request_event(task_callback.stream_sink()),
-    )
-}
-fn wire_shuffle_request_event_impl(port_: MessagePort) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
-        WrapInfo {
-            debug_name: "shuffle_request_event",
-            port: Some(port_),
-            mode: FfiCallMode::Stream,
-        },
-        move || move |task_callback| shuffle_request_event(task_callback.stream_sink()),
-    )
-}
-fn wire_repeat_mode_request_event_impl(port_: MessagePort) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
-        WrapInfo {
-            debug_name: "repeat_mode_request_event",
-            port: Some(port_),
-            mode: FfiCallMode::Stream,
-        },
-        move || move |task_callback| repeat_mode_request_event(task_callback.stream_sink()),
     )
 }
 // Section: wrapper structs
@@ -484,126 +314,62 @@ mod web {
     }
 
     #[wasm_bindgen]
-    pub fn wire_smtc_update_config(port_: MessagePort, media_player: JsValue, config: JsValue) {
-        wire_smtc_update_config_impl(port_, media_player, config)
+    pub fn wire_smtc_update_config(port_: MessagePort, internal: JsValue, config: JsValue) {
+        wire_smtc_update_config_impl(port_, internal, config)
     }
 
     #[wasm_bindgen]
-    pub fn wire_smtc_update_metadata(port_: MessagePort, media_player: JsValue, metadata: JsValue) {
-        wire_smtc_update_metadata_impl(port_, media_player, metadata)
+    pub fn wire_smtc_update_metadata(port_: MessagePort, internal: JsValue, metadata: JsValue) {
+        wire_smtc_update_metadata_impl(port_, internal, metadata)
     }
 
     #[wasm_bindgen]
-    pub fn wire_smtc_update_timeline(port_: MessagePort, media_player: JsValue, timeline: JsValue) {
-        wire_smtc_update_timeline_impl(port_, media_player, timeline)
+    pub fn wire_smtc_update_timeline(port_: MessagePort, internal: JsValue, timeline: JsValue) {
+        wire_smtc_update_timeline_impl(port_, internal, timeline)
     }
 
     #[wasm_bindgen]
-    pub fn wire_smtc_update_playback_status(
-        port_: MessagePort,
-        media_player: JsValue,
-        status: i32,
-    ) {
-        wire_smtc_update_playback_status_impl(port_, media_player, status)
+    pub fn wire_smtc_update_playback_status(port_: MessagePort, internal: JsValue, status: i32) {
+        wire_smtc_update_playback_status_impl(port_, internal, status)
     }
 
     #[wasm_bindgen]
-    pub fn wire_smtc_update_shuffle(port_: MessagePort, media_player: JsValue, shuffle: bool) {
-        wire_smtc_update_shuffle_impl(port_, media_player, shuffle)
+    pub fn wire_smtc_update_shuffle(port_: MessagePort, internal: JsValue, shuffle: bool) {
+        wire_smtc_update_shuffle_impl(port_, internal, shuffle)
     }
 
     #[wasm_bindgen]
     pub fn wire_smtc_update_repeat_mode(
         port_: MessagePort,
-        media_player: JsValue,
+        internal: JsValue,
         repeat_mode: String,
     ) {
-        wire_smtc_update_repeat_mode_impl(port_, media_player, repeat_mode)
+        wire_smtc_update_repeat_mode_impl(port_, internal, repeat_mode)
     }
 
     #[wasm_bindgen]
-    pub fn wire_smtc_disable_smtc(port_: MessagePort, media_player: JsValue) {
-        wire_smtc_disable_smtc_impl(port_, media_player)
+    pub fn wire_smtc_disable_smtc(port_: MessagePort, internal: JsValue) {
+        wire_smtc_disable_smtc_impl(port_, internal)
     }
 
     #[wasm_bindgen]
-    pub fn wire_smtc_button_press_event(port_: MessagePort, media_player: JsValue) {
-        wire_smtc_button_press_event_impl(port_, media_player)
+    pub fn wire_smtc_button_press_event(port_: MessagePort, internal: JsValue) {
+        wire_smtc_button_press_event_impl(port_, internal)
     }
 
     #[wasm_bindgen]
-    pub fn wire_smtc_position_change_request_event(port_: MessagePort, media_player: JsValue) {
-        wire_smtc_position_change_request_event_impl(port_, media_player)
+    pub fn wire_smtc_position_change_request_event(port_: MessagePort, internal: JsValue) {
+        wire_smtc_position_change_request_event_impl(port_, internal)
     }
 
     #[wasm_bindgen]
-    pub fn wire_smtc_shuffle_request_event(port_: MessagePort, media_player: JsValue) {
-        wire_smtc_shuffle_request_event_impl(port_, media_player)
+    pub fn wire_smtc_shuffle_request_event(port_: MessagePort, internal: JsValue) {
+        wire_smtc_shuffle_request_event_impl(port_, internal)
     }
 
     #[wasm_bindgen]
-    pub fn wire_smtc_repeat_mode_request_event(port_: MessagePort, media_player: JsValue) {
-        wire_smtc_repeat_mode_request_event_impl(port_, media_player)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_initialize_media_player(port_: MessagePort, config: JsValue, timeline: JsValue) {
-        wire_initialize_media_player_impl(port_, config, timeline)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_update_config(port_: MessagePort, config: JsValue) {
-        wire_update_config_impl(port_, config)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_update_metadata(port_: MessagePort, metadata: JsValue) {
-        wire_update_metadata_impl(port_, metadata)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_update_timeline(port_: MessagePort, timeline: JsValue) {
-        wire_update_timeline_impl(port_, timeline)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_update_playback_status(port_: MessagePort, status: i32) {
-        wire_update_playback_status_impl(port_, status)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_update_shuffle(port_: MessagePort, shuffle: bool) {
-        wire_update_shuffle_impl(port_, shuffle)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_update_repeat_mode(port_: MessagePort, repeat_mode: String) {
-        wire_update_repeat_mode_impl(port_, repeat_mode)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_disable_smtc(port_: MessagePort) {
-        wire_disable_smtc_impl(port_)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_button_press_event(port_: MessagePort) {
-        wire_button_press_event_impl(port_)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_position_change_request_event(port_: MessagePort) {
-        wire_position_change_request_event_impl(port_)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_shuffle_request_event(port_: MessagePort) {
-        wire_shuffle_request_event_impl(port_)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_repeat_mode_request_event(port_: MessagePort) {
-        wire_repeat_mode_request_event_impl(port_)
+    pub fn wire_smtc_repeat_mode_request_event(port_: MessagePort, internal: JsValue) {
+        wire_smtc_repeat_mode_request_event_impl(port_, internal)
     }
 
     // Section: allocate functions
@@ -611,22 +377,16 @@ mod web {
     // Section: related functions
 
     #[wasm_bindgen]
-    pub fn drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr: *const c_void) {
+    pub fn drop_opaque_SmtcInternal(ptr: *const c_void) {
         unsafe {
-            Arc::<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>::decrement_strong_count(
-                ptr as _,
-            );
+            Arc::<SMTCInternal>::decrement_strong_count(ptr as _);
         }
     }
 
     #[wasm_bindgen]
-    pub fn share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(
-        ptr: *const c_void,
-    ) -> *const c_void {
+    pub fn share_opaque_SmtcInternal(ptr: *const c_void) -> *const c_void {
         unsafe {
-            Arc::<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>::increment_strong_count(
-                ptr as _,
-            );
+            Arc::<SMTCInternal>::increment_strong_count(ptr as _);
             ptr
         }
     }
@@ -710,8 +470,8 @@ mod web {
     }
     // Section: impl Wire2Api for JsValue
 
-    impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>> for JsValue {
-        fn wire2api(self) -> RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>> {
+    impl Wire2Api<RustOpaque<SMTCInternal>> for JsValue {
+        fn wire2api(self) -> RustOpaque<SMTCInternal> {
             #[cfg(target_pointer_width = "64")]
             {
                 compile_error!("64-bit pointers are not supported.");
@@ -787,167 +547,90 @@ mod io {
     #[no_mangle]
     pub extern "C" fn wire_smtc_update_config(
         port_: i64,
-        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+        internal: wire_SmtcInternal,
         config: *mut wire_SMTCConfig,
     ) {
-        wire_smtc_update_config_impl(port_, media_player, config)
+        wire_smtc_update_config_impl(port_, internal, config)
     }
 
     #[no_mangle]
     pub extern "C" fn wire_smtc_update_metadata(
         port_: i64,
-        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+        internal: wire_SmtcInternal,
         metadata: *mut wire_MusicMetadata,
     ) {
-        wire_smtc_update_metadata_impl(port_, media_player, metadata)
+        wire_smtc_update_metadata_impl(port_, internal, metadata)
     }
 
     #[no_mangle]
     pub extern "C" fn wire_smtc_update_timeline(
         port_: i64,
-        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+        internal: wire_SmtcInternal,
         timeline: *mut wire_PlaybackTimeline,
     ) {
-        wire_smtc_update_timeline_impl(port_, media_player, timeline)
+        wire_smtc_update_timeline_impl(port_, internal, timeline)
     }
 
     #[no_mangle]
     pub extern "C" fn wire_smtc_update_playback_status(
         port_: i64,
-        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+        internal: wire_SmtcInternal,
         status: i32,
     ) {
-        wire_smtc_update_playback_status_impl(port_, media_player, status)
+        wire_smtc_update_playback_status_impl(port_, internal, status)
     }
 
     #[no_mangle]
     pub extern "C" fn wire_smtc_update_shuffle(
         port_: i64,
-        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+        internal: wire_SmtcInternal,
         shuffle: bool,
     ) {
-        wire_smtc_update_shuffle_impl(port_, media_player, shuffle)
+        wire_smtc_update_shuffle_impl(port_, internal, shuffle)
     }
 
     #[no_mangle]
     pub extern "C" fn wire_smtc_update_repeat_mode(
         port_: i64,
-        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+        internal: wire_SmtcInternal,
         repeat_mode: *mut wire_uint_8_list,
     ) {
-        wire_smtc_update_repeat_mode_impl(port_, media_player, repeat_mode)
+        wire_smtc_update_repeat_mode_impl(port_, internal, repeat_mode)
     }
 
     #[no_mangle]
-    pub extern "C" fn wire_smtc_disable_smtc(
-        port_: i64,
-        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
-    ) {
-        wire_smtc_disable_smtc_impl(port_, media_player)
+    pub extern "C" fn wire_smtc_disable_smtc(port_: i64, internal: wire_SmtcInternal) {
+        wire_smtc_disable_smtc_impl(port_, internal)
     }
 
     #[no_mangle]
-    pub extern "C" fn wire_smtc_button_press_event(
-        port_: i64,
-        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
-    ) {
-        wire_smtc_button_press_event_impl(port_, media_player)
+    pub extern "C" fn wire_smtc_button_press_event(port_: i64, internal: wire_SmtcInternal) {
+        wire_smtc_button_press_event_impl(port_, internal)
     }
 
     #[no_mangle]
     pub extern "C" fn wire_smtc_position_change_request_event(
         port_: i64,
-        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
+        internal: wire_SmtcInternal,
     ) {
-        wire_smtc_position_change_request_event_impl(port_, media_player)
+        wire_smtc_position_change_request_event_impl(port_, internal)
     }
 
     #[no_mangle]
-    pub extern "C" fn wire_smtc_shuffle_request_event(
-        port_: i64,
-        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
-    ) {
-        wire_smtc_shuffle_request_event_impl(port_, media_player)
+    pub extern "C" fn wire_smtc_shuffle_request_event(port_: i64, internal: wire_SmtcInternal) {
+        wire_smtc_shuffle_request_event_impl(port_, internal)
     }
 
     #[no_mangle]
-    pub extern "C" fn wire_smtc_repeat_mode_request_event(
-        port_: i64,
-        media_player: wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer,
-    ) {
-        wire_smtc_repeat_mode_request_event_impl(port_, media_player)
-    }
-
-    #[no_mangle]
-    pub extern "C" fn wire_initialize_media_player(
-        port_: i64,
-        config: *mut wire_SMTCConfig,
-        timeline: *mut wire_PlaybackTimeline,
-    ) {
-        wire_initialize_media_player_impl(port_, config, timeline)
-    }
-
-    #[no_mangle]
-    pub extern "C" fn wire_update_config(port_: i64, config: *mut wire_SMTCConfig) {
-        wire_update_config_impl(port_, config)
-    }
-
-    #[no_mangle]
-    pub extern "C" fn wire_update_metadata(port_: i64, metadata: *mut wire_MusicMetadata) {
-        wire_update_metadata_impl(port_, metadata)
-    }
-
-    #[no_mangle]
-    pub extern "C" fn wire_update_timeline(port_: i64, timeline: *mut wire_PlaybackTimeline) {
-        wire_update_timeline_impl(port_, timeline)
-    }
-
-    #[no_mangle]
-    pub extern "C" fn wire_update_playback_status(port_: i64, status: i32) {
-        wire_update_playback_status_impl(port_, status)
-    }
-
-    #[no_mangle]
-    pub extern "C" fn wire_update_shuffle(port_: i64, shuffle: bool) {
-        wire_update_shuffle_impl(port_, shuffle)
-    }
-
-    #[no_mangle]
-    pub extern "C" fn wire_update_repeat_mode(port_: i64, repeat_mode: *mut wire_uint_8_list) {
-        wire_update_repeat_mode_impl(port_, repeat_mode)
-    }
-
-    #[no_mangle]
-    pub extern "C" fn wire_disable_smtc(port_: i64) {
-        wire_disable_smtc_impl(port_)
-    }
-
-    #[no_mangle]
-    pub extern "C" fn wire_button_press_event(port_: i64) {
-        wire_button_press_event_impl(port_)
-    }
-
-    #[no_mangle]
-    pub extern "C" fn wire_position_change_request_event(port_: i64) {
-        wire_position_change_request_event_impl(port_)
-    }
-
-    #[no_mangle]
-    pub extern "C" fn wire_shuffle_request_event(port_: i64) {
-        wire_shuffle_request_event_impl(port_)
-    }
-
-    #[no_mangle]
-    pub extern "C" fn wire_repeat_mode_request_event(port_: i64) {
-        wire_repeat_mode_request_event_impl(port_)
+    pub extern "C" fn wire_smtc_repeat_mode_request_event(port_: i64, internal: wire_SmtcInternal) {
+        wire_smtc_repeat_mode_request_event_impl(port_, internal)
     }
 
     // Section: allocate functions
 
     #[no_mangle]
-    pub extern "C" fn new_StdSyncMutexWindowsMediaPlaybackMediaPlayer(
-    ) -> wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer {
-        wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer::new_with_null_ptr()
+    pub extern "C" fn new_SmtcInternal() -> wire_SmtcInternal {
+        wire_SmtcInternal::new_with_null_ptr()
     }
 
     #[no_mangle]
@@ -982,32 +665,24 @@ mod io {
     // Section: related functions
 
     #[no_mangle]
-    pub extern "C" fn drop_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(ptr: *const c_void) {
+    pub extern "C" fn drop_opaque_SmtcInternal(ptr: *const c_void) {
         unsafe {
-            Arc::<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>::decrement_strong_count(
-                ptr as _,
-            );
+            Arc::<SMTCInternal>::decrement_strong_count(ptr as _);
         }
     }
 
     #[no_mangle]
-    pub extern "C" fn share_opaque_StdSyncMutexWindowsMediaPlaybackMediaPlayer(
-        ptr: *const c_void,
-    ) -> *const c_void {
+    pub extern "C" fn share_opaque_SmtcInternal(ptr: *const c_void) -> *const c_void {
         unsafe {
-            Arc::<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>::increment_strong_count(
-                ptr as _,
-            );
+            Arc::<SMTCInternal>::increment_strong_count(ptr as _);
             ptr
         }
     }
 
     // Section: impl Wire2Api
 
-    impl Wire2Api<RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>>>
-        for wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer
-    {
-        fn wire2api(self) -> RustOpaque<std::sync::Mutex<windows::Media::Playback::MediaPlayer>> {
+    impl Wire2Api<RustOpaque<SMTCInternal>> for wire_SmtcInternal {
+        fn wire2api(self) -> RustOpaque<SMTCInternal> {
             unsafe { support::opaque_from_dart(self.ptr as _) }
         }
     }
@@ -1092,7 +767,7 @@ mod io {
 
     #[repr(C)]
     #[derive(Clone)]
-    pub struct wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer {
+    pub struct wire_SmtcInternal {
         ptr: *const core::ffi::c_void,
     }
 
@@ -1148,7 +823,7 @@ mod io {
         }
     }
 
-    impl NewWithNullPtr for wire_StdSyncMutexWindowsMediaPlaybackMediaPlayer {
+    impl NewWithNullPtr for wire_SmtcInternal {
         fn new_with_null_ptr() -> Self {
             Self {
                 ptr: core::ptr::null(),

@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use windows::{Foundation::TimeSpan, Media::SystemMediaTransportControlsTimelineProperties};
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]
 pub struct PlaybackTimeline {
     pub start_time_ms: i64,
     pub end_time_ms: i64,
