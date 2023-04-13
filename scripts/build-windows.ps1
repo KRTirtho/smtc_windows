@@ -23,7 +23,7 @@ function win_build {
 
 $WINDOWS_LIBNAME = "smtc_windows.dll"
 
-# win_build "aarch64-pc-windows-msvc" "windows-arm64" $WINDOWS_LIBNAME
+win_build "aarch64-pc-windows-msvc" "windows-arm64" $WINDOWS_LIBNAME
 
 win_build "x86_64-pc-windows-msvc" "windows-x64" $WINDOWS_LIBNAME
 
