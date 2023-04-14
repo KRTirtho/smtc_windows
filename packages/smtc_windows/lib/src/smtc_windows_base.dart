@@ -1,12 +1,24 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:smtc_windows/src/bridge_generated.dart';
 import 'package:smtc_windows/src/enums/button_event.dart';
 import 'package:smtc_windows/src/enums/repeat_mode.dart';
 import 'package:smtc_windows/src/ffi.dart';
 import 'package:smtc_windows/src/extensions.dart';
 
-final SmtcWindows api = createLib();
+final _isWindows = kIsWeb ? false : Platform.isWindows;
+final SmtcWindows? _api = _isWindows ? createLib() : null;
+
+SmtcWindows get api {
+  if (!_isWindows) {
+    throw UnsupportedError(
+      'SMTC is only supported on Windows. Add a Platform.isWindows check before initializing SMTC',
+    );
+  }
+  return _api!;
+}
 
 class SMTCWindows {
   //! Unsafe shared pointer to the underlying Rust struct.
