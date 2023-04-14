@@ -36,6 +36,8 @@ class SMTCWindows {
   late bool _shuffleEnabled;
   late RepeatMode _repeatMode;
 
+  bool _enabled;
+
   SMTCWindows({
     SMTCConfig? config,
     PlaybackTimeline? timeline,
@@ -43,8 +45,9 @@ class SMTCWindows {
     PlaybackStatus? status,
     bool? shuffleEnabled,
     RepeatMode? repeatMode,
-    bool? enabledByDefault,
-  })  : _internal = api.smtcNew(enabled: enabledByDefault),
+    bool? enabled,
+  })  : _enabled = enabled ?? false,
+        _internal = api.smtcNew(enabled: enabled ?? false),
         _status = status,
         _config = config ??
             const SMTCConfig(
@@ -113,6 +116,7 @@ class SMTCWindows {
 
   bool get isShuffleEnabled => _shuffleEnabled;
   RepeatMode get repeatMode => _repeatMode;
+  bool get enabled => _enabled;
 
   Duration? get startTime => Duration(milliseconds: timeline.startTimeMs);
   Duration? get endTime => Duration(milliseconds: timeline.endTimeMs);
@@ -158,10 +162,12 @@ class SMTCWindows {
   }
 
   Future<void> disableSmtc() {
+    _enabled = false;
     return api.smtcDisableSmtc(internal: _internal);
   }
 
   Future<void> enableSmtc() {
+    _enabled = true;
     return api.smtcEnableSmtc(internal: _internal);
   }
 
