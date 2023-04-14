@@ -17,12 +17,16 @@ flutter_rust_bridge_codegen = "1.72.*"
 
 [dependencies]
 flutter_rust_bridge = "1.72.*"
-windows = { version = "^0.48.0", features = [
-  "Media",
-  "Media_Playback",
-  "Foundation",
-  "Storage_Streams",
-] }
 anyhow = "1.0.*"
-chrono = "0.4.*"
-lazy_static = "1.4.*"
+
+[dependencies.windows]
+version = "^0.48.0"
+features = ["Media", "Media_Playback", "Foundation", "Storage_Streams"]
+
+[profile.release]
+# turn off striping for macOS as it needs
+# static linking to work
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1

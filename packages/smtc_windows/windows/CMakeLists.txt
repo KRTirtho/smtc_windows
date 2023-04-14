@@ -1,4 +1,4 @@
-set(LibraryVersion "smtc_windows-v0.0.1") # generated; do not edit
+# set(LibraryVersion "smtc_windows-v0.0.1") # generated; do not edit
 
 # TODO Remove this workaround once Flutter supports Windows ARM.
 # https://github.com/flutter/flutter/issues/116196
@@ -15,28 +15,28 @@ set(PROJECT_NAME "smtc_windows")
 project(${PROJECT_NAME} LANGUAGES CXX)
 
 # Download the binaries if they are not already present.
-set(LibRoot "${CMAKE_CURRENT_SOURCE_DIR}/${LibraryVersion}")
-set(ArchivePath "${LibRoot}.tar.gz")
-if(NOT EXISTS ${ArchivePath})
-  file(DOWNLOAD
-    "https://github.com/KRTirtho/smtc_windows/releases/download/${LibraryVersion}/other.tar.gz"
-    ${ArchivePath}
-    TLS_VERIFY ON
-  )
-endif()
+# set(LibRoot "${CMAKE_CURRENT_SOURCE_DIR}/${LibraryVersion}")
+# set(ArchivePath "${LibRoot}.tar.gz")
+# if(NOT EXISTS ${ArchivePath})
+#   file(DOWNLOAD
+#     "https://github.com/KRTirtho/smtc_windows/releases/download/${LibraryVersion}/other.tar.gz"
+#     ${ArchivePath}
+#     TLS_VERIFY ON
+#   )
+# endif()
 
 # Extract the binaries, overriding any already present.
-file(REMOVE_RECURSE ${LibRoot})
-file(MAKE_DIRECTORY ${LibRoot})
-execute_process(
-  COMMAND ${CMAKE_COMMAND} -E tar xzf ${ArchivePath}
-  WORKING_DIRECTORY ${LibRoot}
-)
+# file(REMOVE_RECURSE ${LibRoot})
+# file(MAKE_DIRECTORY ${LibRoot})
+# execute_process(
+#   COMMAND ${CMAKE_COMMAND} -E tar xzf ${ArchivePath}
+#   WORKING_DIRECTORY ${LibRoot}
+# )
 
 # List of absolute paths to libraries that should be bundled with the plugin.
 # This list could contain prebuilt libraries, or libraries created by an
 # external build triggered from this build file.
 set(smtc_windows_bundled_libraries
-  "${LibRoot}/${FLUTTER_TARGET_PLATFORM}/smtc_windows.dll"
+  "${CMAKE_CURRENT_SOURCE_DIR}/smtc_windows.dll"
   PARENT_SCOPE
 )

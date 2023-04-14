@@ -4,3 +4,4 @@
 # Allowed files
 !.gitignore
 !CMakeLists.txt
+!smtc_windows.dll
