@@ -43,7 +43,8 @@ class SMTCWindows {
     PlaybackStatus? status,
     bool? shuffleEnabled,
     RepeatMode? repeatMode,
-  })  : _internal = api.smtcNew(),
+    bool? enabledByDefault,
+  })  : _internal = api.smtcNew(enabled: enabledByDefault),
         _status = status,
         _config = config ??
             const SMTCConfig(
@@ -61,15 +62,7 @@ class SMTCWindows {
               startTimeMs: 0,
               endTimeMs: 0,
             ),
-        _metadata = metadata ??
-            const MusicMetadata(
-              title: '',
-              album: '',
-              albumArtist: '',
-              artist: '',
-              thumbnail: '',
-              trackNumber: 0,
-            ),
+        _metadata = metadata ?? const MusicMetadata(),
         _shuffleEnabled = shuffleEnabled ?? false,
         _repeatMode = repeatMode ?? RepeatMode.none {
     _buttonPressedStream = api
@@ -155,13 +148,21 @@ class SMTCWindows {
     );
   }
 
+  Future<void> clearMetadata() {
+    _metadata = const MusicMetadata();
+    return api.smtcClearMetadata(internal: _internal);
+  }
+
   Future<void> dispose() async {
-    await api.smtcUpdatePlaybackStatus(
-      internal: _internal,
-      status: PlaybackStatus.Closed,
-    );
-    await api.smtcDisableSmtc(internal: _internal);
     _internal.dispose();
+  }
+
+  Future<void> disableSmtc() {
+    return api.smtcDisableSmtc(internal: _internal);
+  }
+
+  Future<void> enableSmtc() {
+    return api.smtcEnableSmtc(internal: _internal);
   }
 
   Future<void> setPlaybackStatus(PlaybackStatus status) async {
@@ -222,10 +223,6 @@ class SMTCWindows {
 
   Future<void> setThumbnail(String thumbnail) {
     return updateMetadata(metadata.copyWith(thumbnail: thumbnail));
-  }
-
-  Future<void> setTrackNumber(int trackNumber) {
-    return updateMetadata(metadata.copyWith(trackNumber: trackNumber));
   }
 
   Future<void> setPosition(Duration position) {

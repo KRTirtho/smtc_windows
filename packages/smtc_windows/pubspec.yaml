@@ -15,6 +15,7 @@ dependencies:
   flutter_rust_bridge: ^1.72.1
   plugin_platform_interface: ^2.0.2
   meta: ^1.8.0
+  uuid: ^3.0.7
 
 dev_dependencies:
   ffigen: ^7.2.9

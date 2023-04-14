@@ -30,7 +30,6 @@ class _MyAppState extends State<MyApp> {
         artist: 'Artist',
         thumbnail:
             'https://media.glamour.com/photos/5f4c44e20c71c58fc210d35f/master/w_2560%2Cc_limit/mgid_ao_image_mtv.jpg',
-        trackNumber: 1,
       ),
       timeline: const PlaybackTimeline(
         startTimeMs: 0,
@@ -91,7 +90,6 @@ class _MyAppState extends State<MyApp> {
                 artist: 'Artist',
                 thumbnail:
                     'https://media.glamour.com/photos/5f4c44e20c71c58fc210d35f/master/w_2560%2Cc_limit/mgid_ao_image_mtv.jpg',
-                trackNumber: 1,
               ),
             );
           },

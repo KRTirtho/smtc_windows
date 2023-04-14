@@ -26,14 +26,19 @@ use crate::internal::timeline::PlaybackTimeline;
 
 // Section: wire functions
 
-fn wire_smtc_new_impl() -> support::WireSyncReturn {
+fn wire_smtc_new_impl(
+    enabled: impl Wire2Api<Option<bool>> + UnwindSafe,
+) -> support::WireSyncReturn {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync(
         WrapInfo {
             debug_name: "smtc_new",
             port: None,
             mode: FfiCallMode::Sync,
         },
-        move || smtc_new(),
+        move || {
+            let api_enabled = enabled.wire2api();
+            smtc_new(api_enabled)
+        },
     )
 }
 fn wire_smtc_update_config_impl(
@@ -69,6 +74,22 @@ fn wire_smtc_update_metadata_impl(
             let api_internal = internal.wire2api();
             let api_metadata = metadata.wire2api();
             move |task_callback| smtc_update_metadata(api_internal, api_metadata)
+        },
+    )
+}
+fn wire_smtc_clear_metadata_impl(
+    port_: MessagePort,
+    internal: impl Wire2Api<RustOpaque<SMTCInternal>> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "smtc_clear_metadata",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_internal = internal.wire2api();
+            move |task_callback| smtc_clear_metadata(api_internal)
         },
     )
 }
@@ -141,6 +162,22 @@ fn wire_smtc_update_repeat_mode_impl(
             let api_internal = internal.wire2api();
             let api_repeat_mode = repeat_mode.wire2api();
             move |task_callback| smtc_update_repeat_mode(api_internal, api_repeat_mode)
+        },
+    )
+}
+fn wire_smtc_enable_smtc_impl(
+    port_: MessagePort,
+    internal: impl Wire2Api<RustOpaque<SMTCInternal>> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "smtc_enable_smtc",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_internal = internal.wire2api();
+            move |task_callback| smtc_enable_smtc(api_internal)
         },
     )
 }
@@ -283,11 +320,6 @@ impl Wire2Api<PlaybackStatus> for i32 {
     }
 }
 
-impl Wire2Api<u32> for u32 {
-    fn wire2api(self) -> u32 {
-        self
-    }
-}
 impl Wire2Api<u8> for u8 {
     fn wire2api(self) -> u8 {
         self
@@ -302,246 +334,14 @@ support::lazy_static! {
     pub static ref FLUTTER_RUST_BRIDGE_HANDLER: support::DefaultHandler = Default::default();
 }
 
-/// cbindgen:ignore
-#[cfg(target_family = "wasm")]
-mod web {
-    use super::*;
-    // Section: wire functions
-
-    #[wasm_bindgen]
-    pub fn wire_smtc_new() -> support::WireSyncReturn {
-        wire_smtc_new_impl()
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_smtc_update_config(port_: MessagePort, internal: JsValue, config: JsValue) {
-        wire_smtc_update_config_impl(port_, internal, config)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_smtc_update_metadata(port_: MessagePort, internal: JsValue, metadata: JsValue) {
-        wire_smtc_update_metadata_impl(port_, internal, metadata)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_smtc_update_timeline(port_: MessagePort, internal: JsValue, timeline: JsValue) {
-        wire_smtc_update_timeline_impl(port_, internal, timeline)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_smtc_update_playback_status(port_: MessagePort, internal: JsValue, status: i32) {
-        wire_smtc_update_playback_status_impl(port_, internal, status)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_smtc_update_shuffle(port_: MessagePort, internal: JsValue, shuffle: bool) {
-        wire_smtc_update_shuffle_impl(port_, internal, shuffle)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_smtc_update_repeat_mode(
-        port_: MessagePort,
-        internal: JsValue,
-        repeat_mode: String,
-    ) {
-        wire_smtc_update_repeat_mode_impl(port_, internal, repeat_mode)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_smtc_disable_smtc(port_: MessagePort, internal: JsValue) {
-        wire_smtc_disable_smtc_impl(port_, internal)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_smtc_button_press_event(port_: MessagePort, internal: JsValue) {
-        wire_smtc_button_press_event_impl(port_, internal)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_smtc_position_change_request_event(port_: MessagePort, internal: JsValue) {
-        wire_smtc_position_change_request_event_impl(port_, internal)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_smtc_shuffle_request_event(port_: MessagePort, internal: JsValue) {
-        wire_smtc_shuffle_request_event_impl(port_, internal)
-    }
-
-    #[wasm_bindgen]
-    pub fn wire_smtc_repeat_mode_request_event(port_: MessagePort, internal: JsValue) {
-        wire_smtc_repeat_mode_request_event_impl(port_, internal)
-    }
-
-    // Section: allocate functions
-
-    // Section: related functions
-
-    #[wasm_bindgen]
-    pub fn drop_opaque_SmtcInternal(ptr: *const c_void) {
-        unsafe {
-            Arc::<SMTCInternal>::decrement_strong_count(ptr as _);
-        }
-    }
-
-    #[wasm_bindgen]
-    pub fn share_opaque_SmtcInternal(ptr: *const c_void) -> *const c_void {
-        unsafe {
-            Arc::<SMTCInternal>::increment_strong_count(ptr as _);
-            ptr
-        }
-    }
-
-    // Section: impl Wire2Api
-
-    impl Wire2Api<String> for String {
-        fn wire2api(self) -> String {
-            self
-        }
-    }
-
-    impl Wire2Api<MusicMetadata> for JsValue {
-        fn wire2api(self) -> MusicMetadata {
-            let self_ = self.dyn_into::<JsArray>().unwrap();
-            assert_eq!(
-                self_.length(),
-                6,
-                "Expected 6 elements, got {}",
-                self_.length()
-            );
-            MusicMetadata {
-                title: self_.get(0).wire2api(),
-                artist: self_.get(1).wire2api(),
-                album: self_.get(2).wire2api(),
-                album_artist: self_.get(3).wire2api(),
-                track_number: self_.get(4).wire2api(),
-                thumbnail: self_.get(5).wire2api(),
-            }
-        }
-    }
-    impl Wire2Api<Option<String>> for Option<String> {
-        fn wire2api(self) -> Option<String> {
-            self.map(Wire2Api::wire2api)
-        }
-    }
-
-    impl Wire2Api<PlaybackTimeline> for JsValue {
-        fn wire2api(self) -> PlaybackTimeline {
-            let self_ = self.dyn_into::<JsArray>().unwrap();
-            assert_eq!(
-                self_.length(),
-                5,
-                "Expected 5 elements, got {}",
-                self_.length()
-            );
-            PlaybackTimeline {
-                start_time_ms: self_.get(0).wire2api(),
-                end_time_ms: self_.get(1).wire2api(),
-                position_ms: self_.get(2).wire2api(),
-                min_seek_time_ms: self_.get(3).wire2api(),
-                max_seek_time_ms: self_.get(4).wire2api(),
-            }
-        }
-    }
-    impl Wire2Api<SMTCConfig> for JsValue {
-        fn wire2api(self) -> SMTCConfig {
-            let self_ = self.dyn_into::<JsArray>().unwrap();
-            assert_eq!(
-                self_.length(),
-                7,
-                "Expected 7 elements, got {}",
-                self_.length()
-            );
-            SMTCConfig {
-                play_enabled: self_.get(0).wire2api(),
-                pause_enabled: self_.get(1).wire2api(),
-                stop_enabled: self_.get(2).wire2api(),
-                next_enabled: self_.get(3).wire2api(),
-                prev_enabled: self_.get(4).wire2api(),
-                fast_forward_enabled: self_.get(5).wire2api(),
-                rewind_enabled: self_.get(6).wire2api(),
-            }
-        }
-    }
-
-    impl Wire2Api<Vec<u8>> for Box<[u8]> {
-        fn wire2api(self) -> Vec<u8> {
-            self.into_vec()
-        }
-    }
-    // Section: impl Wire2Api for JsValue
-
-    impl Wire2Api<RustOpaque<SMTCInternal>> for JsValue {
-        fn wire2api(self) -> RustOpaque<SMTCInternal> {
-            #[cfg(target_pointer_width = "64")]
-            {
-                compile_error!("64-bit pointers are not supported.");
-            }
-
-            unsafe { support::opaque_from_dart((self.as_f64().unwrap() as usize) as _) }
-        }
-    }
-    impl Wire2Api<String> for JsValue {
-        fn wire2api(self) -> String {
-            self.as_string().expect("non-UTF-8 string, or not a string")
-        }
-    }
-    impl Wire2Api<bool> for JsValue {
-        fn wire2api(self) -> bool {
-            self.is_truthy()
-        }
-    }
-    impl Wire2Api<i32> for JsValue {
-        fn wire2api(self) -> i32 {
-            self.unchecked_into_f64() as _
-        }
-    }
-    impl Wire2Api<i64> for JsValue {
-        fn wire2api(self) -> i64 {
-            ::std::convert::TryInto::try_into(self.dyn_into::<js_sys::BigInt>().unwrap()).unwrap()
-        }
-    }
-    impl Wire2Api<Option<String>> for JsValue {
-        fn wire2api(self) -> Option<String> {
-            (!self.is_undefined() && !self.is_null()).then(|| self.wire2api())
-        }
-    }
-    impl Wire2Api<Option<i64>> for JsValue {
-        fn wire2api(self) -> Option<i64> {
-            (!self.is_undefined() && !self.is_null()).then(|| self.wire2api())
-        }
-    }
-    impl Wire2Api<PlaybackStatus> for JsValue {
-        fn wire2api(self) -> PlaybackStatus {
-            (self.unchecked_into_f64() as i32).wire2api()
-        }
-    }
-    impl Wire2Api<u32> for JsValue {
-        fn wire2api(self) -> u32 {
-            self.unchecked_into_f64() as _
-        }
-    }
-    impl Wire2Api<u8> for JsValue {
-        fn wire2api(self) -> u8 {
-            self.unchecked_into_f64() as _
-        }
-    }
-    impl Wire2Api<Vec<u8>> for JsValue {
-        fn wire2api(self) -> Vec<u8> {
-            self.unchecked_into::<js_sys::Uint8Array>().to_vec().into()
-        }
-    }
-}
-#[cfg(target_family = "wasm")]
-pub use web::*;
-
 #[cfg(not(target_family = "wasm"))]
 mod io {
     use super::*;
     // Section: wire functions
 
     #[no_mangle]
-    pub extern "C" fn wire_smtc_new() -> support::WireSyncReturn {
-        wire_smtc_new_impl()
+    pub extern "C" fn wire_smtc_new(enabled: *mut bool) -> support::WireSyncReturn {
+        wire_smtc_new_impl(enabled)
     }
 
     #[no_mangle]
@@ -560,6 +360,11 @@ mod io {
         metadata: *mut wire_MusicMetadata,
     ) {
         wire_smtc_update_metadata_impl(port_, internal, metadata)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn wire_smtc_clear_metadata(port_: i64, internal: wire_SmtcInternal) {
+        wire_smtc_clear_metadata_impl(port_, internal)
     }
 
     #[no_mangle]
@@ -599,6 +404,11 @@ mod io {
     }
 
     #[no_mangle]
+    pub extern "C" fn wire_smtc_enable_smtc(port_: i64, internal: wire_SmtcInternal) {
+        wire_smtc_enable_smtc_impl(port_, internal)
+    }
+
+    #[no_mangle]
     pub extern "C" fn wire_smtc_disable_smtc(port_: i64, internal: wire_SmtcInternal) {
         wire_smtc_disable_smtc_impl(port_, internal)
     }
@@ -631,6 +441,11 @@ mod io {
     #[no_mangle]
     pub extern "C" fn new_SmtcInternal() -> wire_SmtcInternal {
         wire_SmtcInternal::new_with_null_ptr()
+    }
+
+    #[no_mangle]
+    pub extern "C" fn new_box_autoadd_bool_0(value: bool) -> *mut bool {
+        support::new_leak_box_ptr(value)
     }
 
     #[no_mangle]
@@ -693,6 +508,11 @@ mod io {
         }
     }
 
+    impl Wire2Api<bool> for *mut bool {
+        fn wire2api(self) -> bool {
+            unsafe { *support::box_from_leak_ptr(self) }
+        }
+    }
     impl Wire2Api<i64> for *mut i64 {
         fn wire2api(self) -> i64 {
             unsafe { *support::box_from_leak_ptr(self) }
@@ -724,7 +544,6 @@ mod io {
                 artist: self.artist.wire2api(),
                 album: self.album.wire2api(),
                 album_artist: self.album_artist.wire2api(),
-                track_number: self.track_number.wire2api(),
                 thumbnail: self.thumbnail.wire2api(),
             }
         }
@@ -778,7 +597,6 @@ mod io {
         artist: *mut wire_uint_8_list,
         album: *mut wire_uint_8_list,
         album_artist: *mut wire_uint_8_list,
-        track_number: u32,
         thumbnail: *mut wire_uint_8_list,
     }
 
@@ -838,7 +656,6 @@ mod io {
                 artist: core::ptr::null_mut(),
                 album: core::ptr::null_mut(),
                 album_artist: core::ptr::null_mut(),
-                track_number: Default::default(),
                 thumbnail: core::ptr::null_mut(),
             }
         }

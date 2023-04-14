@@ -1,2 +1,10 @@
 [workspace]
 members = ["packages/smtc_windows/native"]
+
+[profile.release]
+# turn off striping for macOS as it needs
+# static linking to work
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1

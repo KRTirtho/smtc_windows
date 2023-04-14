@@ -6,8 +6,8 @@ use super::internal::{config::SMTCConfig, metadata::MusicMetadata, timeline::Pla
 
 pub type SMTCInternal = super::internal::smtc_internal::SMTCInternal;
 
-pub fn smtc_new() -> anyhow::Result<SyncReturn<RustOpaque<SMTCInternal>>> {
-    let internal = SMTCInternal::new()?;
+pub fn smtc_new(enabled: Option<bool>) -> anyhow::Result<SyncReturn<RustOpaque<SMTCInternal>>> {
+    let internal = SMTCInternal::new(enabled)?;
     Ok(SyncReturn(RustOpaque::new(internal)))
 }
 
@@ -23,6 +23,10 @@ pub fn smtc_update_metadata(
     metadata: MusicMetadata,
 ) -> anyhow::Result<()> {
     internal.update_metadata(metadata)
+}
+
+pub fn smtc_clear_metadata(internal: RustOpaque<SMTCInternal>) -> anyhow::Result<()> {
+    internal.clear_metadata()
 }
 
 pub fn smtc_update_timeline(
@@ -51,6 +55,10 @@ pub fn smtc_update_repeat_mode(
     repeat_mode: String,
 ) -> anyhow::Result<()> {
     internal.update_repeat_mode(repeat_mode)
+}
+
+pub fn smtc_enable_smtc(internal: RustOpaque<SMTCInternal>) -> anyhow::Result<()> {
+    internal.enable_smtc()
 }
 
 pub fn smtc_disable_smtc(internal: RustOpaque<SMTCInternal>) -> anyhow::Result<()> {

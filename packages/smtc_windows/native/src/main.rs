@@ -20,17 +20,16 @@ fn main() -> anyhow::Result<()> {
         min_seek_time_ms: None,
     };
     let music_metadata = MusicMetadata{
-      album: "Bangerz".to_string(),
-      album_artist: "Miley Cyrus".to_string(),
-      artist: "Miley Cyrus".to_string(),
-      title: "Wrecking Ball".to_string(),
-      track_number: 1,
+      album: Some("Bangerz".to_string()),
+      album_artist: Some("Miley Cyrus".to_string()),
+      artist: Some("Miley Cyrus".to_string()),
+      title: Some("Wrecking Ball".to_string()),
       thumbnail: Some("https://media.glamour.com/photos/5f4c44e20c71c58fc210d35f/master/w_2560%2Cc_limit/mgid_ao_image_mtv.jpg".to_string()),
     };
 
     println!("Waiting 10 seconds...");
 
-    let smtc_internal = smtc_new()?.0;
+    let smtc_internal = smtc_new(None)?.0;
 
     smtc_update_config(smtc_internal.clone(), smtc_config)?;
     smtc_update_metadata(smtc_internal.clone(), music_metadata)?;
@@ -42,14 +41,13 @@ fn main() -> anyhow::Result<()> {
 
     println!("Now with the new API");
 
-    let smtc_internal = SMTCInternal::new()?;
+    let smtc_internal = SMTCInternal::new(None)?;
 
     let music_metadata=  MusicMetadata{
-      album: "Younger Now".to_string(),
-      album_artist: "Miley Cyrus".to_string(),
-      artist: "Miley Cyrus".to_string(),
-      title: "Malibu".to_string(),
-      track_number: 1,
+      album: Some("Younger Now".to_string()),
+      album_artist: Some("Miley Cyrus".to_string()),
+      artist: Some("Miley Cyrus".to_string()),
+      title: Some("Malibu".to_string()),
       thumbnail: Some("https://upload.wikimedia.org/wikipedia/en/thumb/7/72/Miley_Cyrus_-_Younger_Now_%28Official_Album_Cover%29.png/220px-Miley_Cyrus_-_Younger_Now_%28Official_Album_Cover%29.png".to_string()),
     };
 
@@ -60,6 +58,13 @@ fn main() -> anyhow::Result<()> {
     println!("Waiting 10 seconds...");
 
     thread::sleep(Duration::from_secs(10));
+
+    smtc_internal.clear_metadata()?;
+    smtc_internal.disable_smtc()?;
+
+    thread::sleep(Duration::from_secs(4));
+
+    println!("Done");
 
     Ok(())
 }

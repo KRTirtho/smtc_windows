@@ -22,14 +22,14 @@ pub struct SMTCInternal {
 }
 
 impl SMTCInternal {
-    pub fn new() -> anyhow::Result<Self> {
+    pub fn new(enabled: Option<bool>) -> anyhow::Result<Self> {
         let media_player = Box::new(windows::Media::Playback::MediaPlayer::new()?);
 
         let smtc = media_player.SystemMediaTransportControls()?;
 
         media_player.CommandManager()?.SetIsEnabled(false)?;
 
-        smtc.SetIsEnabled(true)?;
+        smtc.SetIsEnabled(enabled.unwrap_or(true))?;
         Ok(Self { media_player })
     }
 
@@ -58,14 +58,18 @@ impl SMTCInternal {
 
         let music_properties = updater.MusicProperties()?;
 
-        music_properties.SetArtist(&metadata.h_artist())?;
-        music_properties.SetAlbumTitle(&metadata.h_album())?;
-        music_properties.SetTitle(&metadata.h_title())?;
-        music_properties.SetTrackNumber(metadata.track_number)?;
-        music_properties.SetAlbumArtist(&metadata.h_album_artist())?;
+        metadata.h_artist().map(|s| music_properties.SetArtist(&s));
 
-        let thumbnail = &metadata.h_thumbnail().map(|h| {
-            let uri = Foundation::Uri::CreateUri(&h).unwrap();
+        metadata
+            .h_album()
+            .map(|s| music_properties.SetAlbumTitle(&s));
+        metadata.h_title().map(|s| music_properties.SetTitle(&s));
+        metadata
+            .h_album_artist()
+            .map(|s| music_properties.SetAlbumArtist(&s));
+
+        let thumbnail = &metadata.h_thumbnail().map(|s| {
+            let uri = Foundation::Uri::CreateUri(&s).unwrap();
             RandomAccessStreamReference::CreateFromUri(&uri).unwrap()
         });
 
@@ -73,6 +77,18 @@ impl SMTCInternal {
             updater.SetThumbnail(thumbnail)?;
         }
 
+        updater.Update()?;
+
+        Ok(())
+    }
+
+    pub fn clear_metadata(&self) -> anyhow::Result<()> {
+        let media_player = &self.media_player;
+        let smtc = media_player.SystemMediaTransportControls()?;
+
+        let updater = smtc.DisplayUpdater()?;
+
+        updater.ClearAll()?;
         updater.Update()?;
 
         Ok(())
@@ -115,6 +131,13 @@ impl SMTCInternal {
             _ => smtc.SetAutoRepeatMode(MediaPlaybackAutoRepeatMode::None)?,
         }
 
+        Ok(())
+    }
+
+    pub fn enable_smtc(&self) -> anyhow::Result<()> {
+        let media_player = &self.media_player;
+        let smtc = media_player.SystemMediaTransportControls();
+        smtc?.SetIsEnabled(true)?;
         Ok(())
     }
 

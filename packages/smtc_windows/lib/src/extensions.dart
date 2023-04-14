@@ -46,7 +46,6 @@ extension MusicMetadataCopy on MusicMetadata {
     String? artist,
     String? album,
     String? albumArtist,
-    int? trackNumber,
     String? thumbnail,
   }) {
     return MusicMetadata(
@@ -54,7 +53,6 @@ extension MusicMetadataCopy on MusicMetadata {
       artist: artist ?? this.artist,
       album: album ?? this.album,
       albumArtist: albumArtist ?? this.albumArtist,
-      trackNumber: trackNumber ?? this.trackNumber,
       thumbnail: thumbnail ?? this.thumbnail,
     );
   }
