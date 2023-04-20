@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 import 'package:smtc_windows/smtc_windows.dart';
 
@@ -15,9 +14,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late int sumResult;
-  late Future<int> sumAsyncResult;
-
   late SMTCWindows smtc;
 
   @override
@@ -54,6 +50,10 @@ class _MyAppState extends State<MyApp> {
               break;
             case PressedButton.previous:
               print('Previous');
+              break;
+            case PressedButton.stop:
+              smtc.setPlaybackStatus(PlaybackStatus.Stopped);
+              smtc.disableSmtc();
               break;
             default:
               break;
