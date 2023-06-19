@@ -13,7 +13,7 @@ name = "smtc_windows_bin"
 path = "src/main.rs"
 
 [build-dependencies]
-flutter_rust_bridge_codegen = "1.72.*"
+flutter_rust_bridge_codegen = "1.78.*"
 
 [dependencies]
 flutter_rust_bridge = "1.72.*"
