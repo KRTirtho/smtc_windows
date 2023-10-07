@@ -1,4 +1,4 @@
-name: Publish Release(s)
+name: Build DLL
 on:
   workflow_dispatch: 
 
