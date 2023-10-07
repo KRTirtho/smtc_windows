@@ -13,12 +13,12 @@ name = "smtc_windows_bin"
 path = "src/main.rs"
 
 [build-dependencies]
-flutter_rust_bridge_codegen = "1.72.*"
+flutter_rust_bridge_codegen = "1.82.*"
 
 [dependencies]
-flutter_rust_bridge = "1.72.*"
+flutter_rust_bridge = "1.82.*"
 anyhow = "1.0.*"
 
 [dependencies.windows]
-version = "^0.48.0"
+version = "0.51.*"
 features = ["Media", "Media_Playback", "Foundation", "Storage_Streams"]
