@@ -3,7 +3,7 @@
 [![pub package](https://img.shields.io/pub/v/smtc_windows.svg)](https://pub.dev/packages/smtc_windows)
 
 
-Windows `SystemMediaTransportControls` implementation for Flutter. This is the windows equivalent of android's [audio_session](https://pub.dev/packages/audio_session) and Linux's D-Bus MPRIS (Media Player Remote Interfacing Specification)
+Windows `SystemMediaTransportControls` implementation for Flutter. This is the windows equivalent of android's [audio_service](https://pub.dev/packages/audio_service) and Linux's D-Bus MPRIS (Media Player Remote Interfacing Specification)
 
 ### Install
 
