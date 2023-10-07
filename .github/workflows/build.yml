@@ -1,0 +1,24 @@
+name: Publish Release(s)
+on:
+  workflow_dispatch: 
+
+
+jobs:
+  build_dll:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+      - uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "15"
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Build all windows library binaries
+        run: melos run build
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: platform-build/*
