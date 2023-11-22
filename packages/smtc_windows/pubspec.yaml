@@ -1,6 +1,6 @@
 name: smtc_windows
 description: Windows `SystemMediaTransportControls` implementation for Flutter giving access to Windows OS Media Control applet.
-version: 0.1.1
+version: 0.1.2
 homepage: https://github.com/KRTirtho/smtc_windows
 repository: https://github.com/KRTirtho/smtc_windows/tree/main/packages/smtc_windows
 

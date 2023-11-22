@@ -1,3 +1,8 @@
+## 0.1.2
+
+ - **FIX**: enabled not true by default.
+ - **DOCS**: fix wrong lib.
+
 ## 0.1.1
 
  - **REFACTOR**: use internal wrapper to allow using for both binding and native Rust.
