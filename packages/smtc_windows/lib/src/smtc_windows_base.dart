@@ -46,8 +46,8 @@ class SMTCWindows {
     bool? shuffleEnabled,
     RepeatMode? repeatMode,
     bool? enabled,
-  })  : _enabled = enabled ?? false,
-        _internal = api.smtcNew(enabled: enabled ?? false),
+  })  : _enabled = enabled ?? true,
+        _internal = api.smtcNew(enabled: enabled ?? true),
         _status = status,
         _config = config ??
             const SMTCConfig(
