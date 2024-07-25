@@ -1,0 +1,2 @@
+cargo install flutter_rust_bridge_codegen@1.80.1
+flutter_rust_bridge_codegen --rust-input ..\packages\smtc_windows\native\src\api.rs --dart-output ..\packages\smtc_windows\lib\src\bridge_generated.dart -v

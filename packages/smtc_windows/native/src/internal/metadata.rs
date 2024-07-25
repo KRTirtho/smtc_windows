@@ -7,6 +7,7 @@ pub struct MusicMetadata {
     pub album: Option<String>,
     pub album_artist: Option<String>,
     pub thumbnail: Option<String>,
+    pub thumbnail_stream: Option<Vec<u8>>,
 }
 
 impl MusicMetadata {

@@ -1,4 +1,5 @@
 use flutter_rust_bridge::StreamSink;
+use windows::Storage::Streams::{DataWriter, InMemoryRandomAccessStream};
 use windows::{
     Foundation::{self, TypedEventHandler},
     Media::{
@@ -73,8 +74,20 @@ impl SMTCInternal {
             RandomAccessStreamReference::CreateFromUri(&uri).unwrap()
         });
 
+        let thumbnail_stream = metadata.thumbnail_stream.map(|s| {
+            let stream = InMemoryRandomAccessStream::new().unwrap();
+            let writer = DataWriter::CreateDataWriter(&stream).unwrap();
+            writer.WriteBytes(&s).unwrap();
+            writer.StoreAsync().unwrap().get().unwrap();
+            writer.FlushAsync().unwrap().get().unwrap();
+            writer.DetachStream().unwrap();
+            RandomAccessStreamReference::CreateFromStream(&stream).unwrap()
+        });
+
         if let Some(thumbnail) = thumbnail {
             updater.SetThumbnail(thumbnail)?;
+        } else if let Some(thumbnail_stream) = thumbnail_stream {
+            updater.SetThumbnail(&thumbnail_stream)?;
         }
 
         updater.Update()?;

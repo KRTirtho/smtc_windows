@@ -1,0 +1,373 @@
+use super::*;
+// Section: wire functions
+
+#[no_mangle]
+pub extern "C" fn wire_smtc_new(enabled: *mut bool) -> support::WireSyncReturn {
+    wire_smtc_new_impl(enabled)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_smtc_update_config(
+    port_: i64,
+    internal: wire_SmtcInternal,
+    config: *mut wire_SMTCConfig,
+) {
+    wire_smtc_update_config_impl(port_, internal, config)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_smtc_update_metadata(
+    port_: i64,
+    internal: wire_SmtcInternal,
+    metadata: *mut wire_MusicMetadata,
+) {
+    wire_smtc_update_metadata_impl(port_, internal, metadata)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_smtc_clear_metadata(port_: i64, internal: wire_SmtcInternal) {
+    wire_smtc_clear_metadata_impl(port_, internal)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_smtc_update_timeline(
+    port_: i64,
+    internal: wire_SmtcInternal,
+    timeline: *mut wire_PlaybackTimeline,
+) {
+    wire_smtc_update_timeline_impl(port_, internal, timeline)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_smtc_update_playback_status(
+    port_: i64,
+    internal: wire_SmtcInternal,
+    status: i32,
+) {
+    wire_smtc_update_playback_status_impl(port_, internal, status)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_smtc_update_shuffle(port_: i64, internal: wire_SmtcInternal, shuffle: bool) {
+    wire_smtc_update_shuffle_impl(port_, internal, shuffle)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_smtc_update_repeat_mode(
+    port_: i64,
+    internal: wire_SmtcInternal,
+    repeat_mode: *mut wire_uint_8_list,
+) {
+    wire_smtc_update_repeat_mode_impl(port_, internal, repeat_mode)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_smtc_enable_smtc(port_: i64, internal: wire_SmtcInternal) {
+    wire_smtc_enable_smtc_impl(port_, internal)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_smtc_disable_smtc(port_: i64, internal: wire_SmtcInternal) {
+    wire_smtc_disable_smtc_impl(port_, internal)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_smtc_button_press_event(port_: i64, internal: wire_SmtcInternal) {
+    wire_smtc_button_press_event_impl(port_, internal)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_smtc_position_change_request_event(port_: i64, internal: wire_SmtcInternal) {
+    wire_smtc_position_change_request_event_impl(port_, internal)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_smtc_shuffle_request_event(port_: i64, internal: wire_SmtcInternal) {
+    wire_smtc_shuffle_request_event_impl(port_, internal)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_smtc_repeat_mode_request_event(port_: i64, internal: wire_SmtcInternal) {
+    wire_smtc_repeat_mode_request_event_impl(port_, internal)
+}
+
+// Section: allocate functions
+
+#[no_mangle]
+pub extern "C" fn new_SmtcInternal() -> wire_SmtcInternal {
+    wire_SmtcInternal::new_with_null_ptr()
+}
+
+#[no_mangle]
+pub extern "C" fn new_box_autoadd_bool_0(value: bool) -> *mut bool {
+    support::new_leak_box_ptr(value)
+}
+
+#[no_mangle]
+pub extern "C" fn new_box_autoadd_i64_0(value: i64) -> *mut i64 {
+    support::new_leak_box_ptr(value)
+}
+
+#[no_mangle]
+pub extern "C" fn new_box_autoadd_music_metadata_0() -> *mut wire_MusicMetadata {
+    support::new_leak_box_ptr(wire_MusicMetadata::new_with_null_ptr())
+}
+
+#[no_mangle]
+pub extern "C" fn new_box_autoadd_playback_timeline_0() -> *mut wire_PlaybackTimeline {
+    support::new_leak_box_ptr(wire_PlaybackTimeline::new_with_null_ptr())
+}
+
+#[no_mangle]
+pub extern "C" fn new_box_autoadd_smtc_config_0() -> *mut wire_SMTCConfig {
+    support::new_leak_box_ptr(wire_SMTCConfig::new_with_null_ptr())
+}
+
+#[no_mangle]
+pub extern "C" fn new_uint_8_list_0(len: i32) -> *mut wire_uint_8_list {
+    let ans = wire_uint_8_list {
+        ptr: support::new_leak_vec_ptr(Default::default(), len),
+        len,
+    };
+    support::new_leak_box_ptr(ans)
+}
+
+// Section: related functions
+
+#[no_mangle]
+pub extern "C" fn drop_opaque_SmtcInternal(ptr: *const c_void) {
+    unsafe {
+        Arc::<SMTCInternal>::decrement_strong_count(ptr as _);
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn share_opaque_SmtcInternal(ptr: *const c_void) -> *const c_void {
+    unsafe {
+        Arc::<SMTCInternal>::increment_strong_count(ptr as _);
+        ptr
+    }
+}
+
+// Section: impl Wire2Api
+
+impl Wire2Api<RustOpaque<SMTCInternal>> for wire_SmtcInternal {
+    fn wire2api(self) -> RustOpaque<SMTCInternal> {
+        unsafe { support::opaque_from_dart(self.ptr as _) }
+    }
+}
+impl Wire2Api<String> for *mut wire_uint_8_list {
+    fn wire2api(self) -> String {
+        let vec: Vec<u8> = self.wire2api();
+        String::from_utf8_lossy(&vec).into_owned()
+    }
+}
+
+impl Wire2Api<bool> for *mut bool {
+    fn wire2api(self) -> bool {
+        unsafe { *support::box_from_leak_ptr(self) }
+    }
+}
+impl Wire2Api<i64> for *mut i64 {
+    fn wire2api(self) -> i64 {
+        unsafe { *support::box_from_leak_ptr(self) }
+    }
+}
+impl Wire2Api<MusicMetadata> for *mut wire_MusicMetadata {
+    fn wire2api(self) -> MusicMetadata {
+        let wrap = unsafe { support::box_from_leak_ptr(self) };
+        Wire2Api::<MusicMetadata>::wire2api(*wrap).into()
+    }
+}
+impl Wire2Api<PlaybackTimeline> for *mut wire_PlaybackTimeline {
+    fn wire2api(self) -> PlaybackTimeline {
+        let wrap = unsafe { support::box_from_leak_ptr(self) };
+        Wire2Api::<PlaybackTimeline>::wire2api(*wrap).into()
+    }
+}
+impl Wire2Api<SMTCConfig> for *mut wire_SMTCConfig {
+    fn wire2api(self) -> SMTCConfig {
+        let wrap = unsafe { support::box_from_leak_ptr(self) };
+        Wire2Api::<SMTCConfig>::wire2api(*wrap).into()
+    }
+}
+
+impl Wire2Api<MusicMetadata> for wire_MusicMetadata {
+    fn wire2api(self) -> MusicMetadata {
+        MusicMetadata {
+            title: self.title.wire2api(),
+            artist: self.artist.wire2api(),
+            album: self.album.wire2api(),
+            album_artist: self.album_artist.wire2api(),
+            thumbnail: self.thumbnail.wire2api(),
+            thumbnail_stream: self.thumbnail_stream.wire2api(),
+        }
+    }
+}
+
+impl Wire2Api<PlaybackTimeline> for wire_PlaybackTimeline {
+    fn wire2api(self) -> PlaybackTimeline {
+        PlaybackTimeline {
+            start_time_ms: self.start_time_ms.wire2api(),
+            end_time_ms: self.end_time_ms.wire2api(),
+            position_ms: self.position_ms.wire2api(),
+            min_seek_time_ms: self.min_seek_time_ms.wire2api(),
+            max_seek_time_ms: self.max_seek_time_ms.wire2api(),
+        }
+    }
+}
+impl Wire2Api<SMTCConfig> for wire_SMTCConfig {
+    fn wire2api(self) -> SMTCConfig {
+        SMTCConfig {
+            play_enabled: self.play_enabled.wire2api(),
+            pause_enabled: self.pause_enabled.wire2api(),
+            stop_enabled: self.stop_enabled.wire2api(),
+            next_enabled: self.next_enabled.wire2api(),
+            prev_enabled: self.prev_enabled.wire2api(),
+            fast_forward_enabled: self.fast_forward_enabled.wire2api(),
+            rewind_enabled: self.rewind_enabled.wire2api(),
+        }
+    }
+}
+
+impl Wire2Api<Vec<u8>> for *mut wire_uint_8_list {
+    fn wire2api(self) -> Vec<u8> {
+        unsafe {
+            let wrap = support::box_from_leak_ptr(self);
+            support::vec_from_leak_ptr(wrap.ptr, wrap.len)
+        }
+    }
+}
+// Section: wire structs
+
+#[repr(C)]
+#[derive(Clone)]
+pub struct wire_SmtcInternal {
+    ptr: *const core::ffi::c_void,
+}
+
+#[repr(C)]
+#[derive(Clone)]
+pub struct wire_MusicMetadata {
+    title: *mut wire_uint_8_list,
+    artist: *mut wire_uint_8_list,
+    album: *mut wire_uint_8_list,
+    album_artist: *mut wire_uint_8_list,
+    thumbnail: *mut wire_uint_8_list,
+    thumbnail_stream: *mut wire_uint_8_list,
+}
+
+#[repr(C)]
+#[derive(Clone)]
+pub struct wire_PlaybackTimeline {
+    start_time_ms: i64,
+    end_time_ms: i64,
+    position_ms: i64,
+    min_seek_time_ms: *mut i64,
+    max_seek_time_ms: *mut i64,
+}
+
+#[repr(C)]
+#[derive(Clone)]
+pub struct wire_SMTCConfig {
+    play_enabled: bool,
+    pause_enabled: bool,
+    stop_enabled: bool,
+    next_enabled: bool,
+    prev_enabled: bool,
+    fast_forward_enabled: bool,
+    rewind_enabled: bool,
+}
+
+#[repr(C)]
+#[derive(Clone)]
+pub struct wire_uint_8_list {
+    ptr: *mut u8,
+    len: i32,
+}
+
+// Section: impl NewWithNullPtr
+
+pub trait NewWithNullPtr {
+    fn new_with_null_ptr() -> Self;
+}
+
+impl<T> NewWithNullPtr for *mut T {
+    fn new_with_null_ptr() -> Self {
+        std::ptr::null_mut()
+    }
+}
+
+impl NewWithNullPtr for wire_SmtcInternal {
+    fn new_with_null_ptr() -> Self {
+        Self {
+            ptr: core::ptr::null(),
+        }
+    }
+}
+
+impl NewWithNullPtr for wire_MusicMetadata {
+    fn new_with_null_ptr() -> Self {
+        Self {
+            title: core::ptr::null_mut(),
+            artist: core::ptr::null_mut(),
+            album: core::ptr::null_mut(),
+            album_artist: core::ptr::null_mut(),
+            thumbnail: core::ptr::null_mut(),
+            thumbnail_stream: core::ptr::null_mut(),
+        }
+    }
+}
+
+impl Default for wire_MusicMetadata {
+    fn default() -> Self {
+        Self::new_with_null_ptr()
+    }
+}
+
+impl NewWithNullPtr for wire_PlaybackTimeline {
+    fn new_with_null_ptr() -> Self {
+        Self {
+            start_time_ms: Default::default(),
+            end_time_ms: Default::default(),
+            position_ms: Default::default(),
+            min_seek_time_ms: core::ptr::null_mut(),
+            max_seek_time_ms: core::ptr::null_mut(),
+        }
+    }
+}
+
+impl Default for wire_PlaybackTimeline {
+    fn default() -> Self {
+        Self::new_with_null_ptr()
+    }
+}
+
+impl NewWithNullPtr for wire_SMTCConfig {
+    fn new_with_null_ptr() -> Self {
+        Self {
+            play_enabled: Default::default(),
+            pause_enabled: Default::default(),
+            stop_enabled: Default::default(),
+            next_enabled: Default::default(),
+            prev_enabled: Default::default(),
+            fast_forward_enabled: Default::default(),
+            rewind_enabled: Default::default(),
+        }
+    }
+}
+
+impl Default for wire_SMTCConfig {
+    fn default() -> Self {
+        Self::new_with_null_ptr()
+    }
+}
+
+// Section: sync execution mode utility
+
+#[no_mangle]
+pub extern "C" fn free_WireSyncReturn(ptr: support::WireSyncReturn) {
+    unsafe {
+        let _ = support::box_from_leak_ptr(ptr);
+    };
+}
